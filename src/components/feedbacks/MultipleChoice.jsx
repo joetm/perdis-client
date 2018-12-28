@@ -5,12 +5,15 @@ import { Block, BlockTitle, List, ListItem, Row, Col, Button } from 'framework7-
 export default class LikertComponent extends React.Component {
   constructor(props) {
     super(props)
-      this.state = {
-        selectedOption: null,
-      }
-      this.resetInput = this.resetInput.bind(this)
-      this.submit = this.submit.bind(this)
-      this.enableSubmitBtn = this.enableSubmitBtn.bind(this)
+    // ---
+    this.state = {
+      selectedOption: null,
+    }
+    // ---
+    this.resetInput = this.resetInput.bind(this)
+    this.submit = this.submit.bind(this)
+    this.enableSubmitBtn = this.enableSubmitBtn.bind(this)
+    this.setValue = this.setValue.bind(this)
   }
   submit () {
     const { send, artworkID } = this.props // 'send' function from props
@@ -28,6 +31,10 @@ export default class LikertComponent extends React.Component {
   enableSubmitBtn(e) {
     this.setState({selectedOption: e.target.value})
   }
+  setValue(e) {
+    // console.log(e.target);
+    // this.setState({selectedOption: e.target.value})
+  }
   resetInput () {
     this.setState({selectedOption: null})
   }
@@ -41,10 +48,10 @@ export default class LikertComponent extends React.Component {
 
         <BlockTitle>Choose one answer</BlockTitle>
         <List>
-          <ListItem checked={selectedOption == 'Books'}  onChange={this.enableSubmitBtn} radio required value="Books"  title="Books"  name="choice"></ListItem>
-          <ListItem checked={selectedOption == 'Movies'} onChange={this.enableSubmitBtn} radio required value="Movies" title="Movies" name="choice"></ListItem>
-          <ListItem checked={selectedOption == 'Food'}   onChange={this.enableSubmitBtn} radio required value="Food"   title="Food"   name="choice"></ListItem>
-          <ListItem checked={selectedOption == 'Drinks'} onChange={this.enableSubmitBtn} radio required value="Drinks" title="Drinks" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="Books" title="Books" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="Movies" title="Movies" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="Food"   title="Food"   name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="Drinks" title="Drinks" name="choice"></ListItem>
         </List>
 
             <Row>
