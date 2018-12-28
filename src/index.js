@@ -17,6 +17,9 @@ import 'framework7/css/framework7.min.css';
 // Icons
 import './css/icons.css';
 
+// FontAwesome
+import '../node_modules/@fortawesome/fontawesome-pro/css/all.min.css'
+
 // Custom app styles
 import './css/app.css';
 
