@@ -7,7 +7,7 @@ import {
   ListInput, Input, Label
 } from 'framework7-react'
 
-// import Image          from '../components/feedbacks/Image'
+import Image          from '../feedbacks/Image'
 // import Video          from '../components/feedbacks/Video'
 // import Reaction       from '../components/feedbacks/Reaction'
 // // import Visual         from '../components/feedbacks/Visual'
@@ -56,6 +56,7 @@ export default class RatingPage extends React.Component {
   }
   componentWillMount () {
     const { SERVER, PORT } = this.$f7.data
+    // this.setState({connectionError: true})
     this.mySocket = new WebSocket("ws://" + SERVER + ":" + PORT + "/")
     // console.log('mySocket', this.mySocket);
     this.mySocket.onopen = function (event) {

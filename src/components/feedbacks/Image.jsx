@@ -152,7 +152,7 @@ export default class ImageComponent extends React.Component {
       this.activateWebStream()
     } else {
       alert('TODO: acquireImage on mobile')
-      this.getPicture()
+      // this.getPicture()
     }
   }
   render() {
@@ -163,7 +163,7 @@ export default class ImageComponent extends React.Component {
         <p>Send a selfie to the artist!</p>
 
         <Block>
-            <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={true} playsInline={true}></video>
+            <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={'autoplay'} playsInline={true}></video>
             <canvas id="canvas" ref={this.canvasRef} style={styles.img}></canvas>
         </Block>
 
