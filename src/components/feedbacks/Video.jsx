@@ -25,12 +25,12 @@ export default class VideoComponent extends React.Component {
     this.state = {
       buttonTxt: <StartButtonTxt />,
       submitBtnDisabled: true,
+      video: null,
     }
     // ---
-    this.videoRef    = React.createRef()
+    // this.videoRef    = React.createRef()
     // ---
     this.submit = this.submit.bind(this)
-    this.enableSubmitBtn = this.enableSubmitBtn.bind(this)
     this.resetVideo = this.resetVideo.bind(this)
     this.startRecording = this.startRecording.bind(this)
     this.captureSuccess = this.captureSuccess.bind(this)
@@ -39,22 +39,22 @@ export default class VideoComponent extends React.Component {
   }
   submit() {
     const { send, artworkID } = this.props
+    const { video } = this.state
     const feedback = {
       type: 'video',
       id: artworkID,
-      payload: 'TODO',
+      payload: video,
     }
     const ret = send(feedback)
     if (ret) {
       this.resetVideo()
     }
   }
-  enableSubmitBtn() {
-    this.setState({
-      submitBtnDisabled: false,
-    })
-  }
   resetVideo () {
+    this.setState({
+      video: null,
+      submitBtnDisabled: true,
+    })
   }
   startRecording() {
     const videoOptions = {
@@ -68,25 +68,40 @@ export default class VideoComponent extends React.Component {
   }
     captureSuccess (mediaFiles) {
       console.log(mediaFiles);
+      // end:0
+      // fullPath:"file:///storage/emulated/0/DCIM/Camera/VID_20181229_130634.mp4"
+      // lastModified:null
+      // lastModifiedDate:1546106798000
+      // localURL:"cdvfile://localhost/sdcard/DCIM/Camera/VID_20181229_130634.mp4"
+      // name:"VID_20181229_130634.mp4"
+      // size:39525
+      // start:0
+      // type:"video/mp4"
+      this.setState({
+        video: mediaFiles[0],
+        submitBtnDisabled: false,
+      });
     }
     captureError () {
       //navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
-      alert('Error code: ' + error.code, null, 'Capture Error');
+      alert('Capture Error. Error code: ' + error.code);
     }
   render() {
     if (Device.desktop) {
-      return (<Block>Can't preview this feedback in the browser.</Block>)
+      return (<Block>Can't preview this feedback type in the browser.</Block>)
     }
+    const { video } = this.state
     return (
       <Block id="webcam-video">
 
         <p>Send a selfie video to the artist!</p>
 
-{/*
-        <Block>
-          <video id="video"    ref={this.videoRef}    style={styles.video}    playsInline={true} autoPlay={true} muted={true}></video>
-        </Block>
-*/}
+        {
+          video && video.fullPath &&
+          <Block>
+            <video src={video.fullPath} id="video" style={styles.video} playsInline={true} autoPlay={true} muted={true}></video>
+          </Block>
+        }
 
         <div id="errorMsg"></div>
 
