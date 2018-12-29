@@ -9,7 +9,7 @@ import {
 
 import Image          from '../feedbacks/Image'
 import Video          from '../feedbacks/Video'
-// import Reaction       from '../components/feedbacks/Reaction'
+import Reaction       from '../feedbacks/Reaction'
 // // import Visual         from '../components/feedbacks/Visual'
 import Question       from '../feedbacks/Question'
 import Answer         from '../feedbacks/Answer'
@@ -121,9 +121,9 @@ export default class RatingPage extends React.Component {
       case 'video':
         return <Video artworkID={artworkID} feedback={feedback} send={this.refresh} />
         break
-      // case 'reaction':
-      //   return <Reaction artworkID={artworkID} feedback={feedback} send={this.refresh} />
-      //   break
+      case 'reaction':
+        return <Reaction artworkID={artworkID} feedback={feedback} send={this.refresh} />
+        break
       // case 'visual':
       //   return <Visual artworkID={artworkID} artwork={artwork} feedback={feedback} send={this.refresh} />
       //   break
