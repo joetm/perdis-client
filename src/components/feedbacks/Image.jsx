@@ -1,6 +1,8 @@
 import React from 'react'
 import { Block, Row, Col, Button, Icon } from 'framework7-react'
 import { Device } from 'framework7'
+import CaptureButton from '../CaptureButton'
+
 
 const styles = {
   video: {
@@ -21,6 +23,15 @@ const styles = {
     marginLeft: '10px',
     backgroundColor: '#303030',
   },
+  mobileImg: {
+    margin: '1em',
+    maxWidth: '100px',
+    height: 'auto',
+    align: 'center',
+  },
+  center: {
+    textAlign: 'center',
+  },
 }
 
 
@@ -28,53 +39,40 @@ export default class ImageComponent extends React.Component {
   constructor(props) {
     super(props)
     // ---
+    this.state = {
+      submitBtnDisabled: true,
+      errorMsg: null,
+      image: null,
+    }
+    // ---
     this.videoRef  = React.createRef()
     this.canvasRef = React.createRef()
     // ---
     this.submit = this.submit.bind(this)
-    this.handleSuccess = this.handleSuccess.bind(this)
-    this.handleError = this.handleError.bind(this)
-    this.activateWebStream = this.activateWebStream.bind(this)
-    this.capture = this.capture.bind(this)
+    this.onCaptureClick = this.onCaptureClick.bind(this)
     this.resetCapture = this.resetCapture.bind(this)
-    // this.drawText = this.drawText.bind(this)
+    // for mobile
     this.getPicture = this.getPicture.bind(this)
-      this.cameraSuccess = this.cameraSuccess.bind(this)
-      this.cameraError = this.cameraError.bind(this)
-    // ---
-    this.state = {
-      submitBtnDisabled: true,
-      errorMsg: null,
-    }
+      this.nativeCameraSuccess = this.nativeCameraSuccess.bind(this)
+      this.nativeCameraError = this.nativeCameraError.bind(this)
+    // for web
+    this.activateWebStream = this.activateWebStream.bind(this)
+      this.handleStreamSuccess = this.handleStreamSuccess.bind(this)
+      this.handleStreamError = this.handleStreamError.bind(this)
   }
   submit() {
     const { send, artworkID } = this.props
+    const { image } = this.state
     const feedback = {
       type: 'image',
       id: artworkID,
+      // imageURL: image, 
+      payload: image,
     }
-    const theCanvas = this.canvasRef.current
-    const selfie = theCanvas.toDataURL("image/jpeg")
-    feedback.payload = selfie
     const ret = send(feedback)
     if (ret) {
       this.resetCapture()
     }
-  }
-  handleSuccess(stream) {
-    window.stream = stream // make stream available to browser console
-    const videoNode = this.videoRef.current
-    videoNode.srcObject = stream
-    // or ?
-    // videoNode.src = URL.createObjectURL(stream)
-  }
-  handleError(error) {
-    console.error('navigator.getUserMedia error [%s]: ', error.code, error.name, error.message)
-    let name = error.name
-    if (error.name == 'NotSupportedError') {
-      name = 'Browser Not Supported'
-    }
-    this.setState({errorMsg: name + ': ' + error.message})
   }
   activateWebStream() {
     console.log('activateWebStream')
@@ -87,77 +85,101 @@ export default class ImageComponent extends React.Component {
       video: true
     }
     navigator.mediaDevices.getUserMedia(constraints).then(
-      this.handleSuccess
+      this.handleStreamSuccess
     ).catch(
-      this.handleError
+      this.handleStreamError
     )
   }
+    handleStreamSuccess(stream) {
+      window.stream = stream // make stream available to browser console
+      const videoNode = this.videoRef.current
+      videoNode.srcObject = stream
+      // or ?
+      // videoNode.src = URL.createObjectURL(stream)
+    }
+    handleStreamError(error) {
+      console.error('navigator.getUserMedia error [%s]: ', error.code, error.name, error.message)
+      let name = error.name
+      if (error.name == 'NotSupportedError') {
+        name = 'Browser Not Supported'
+      }
+      this.setState({errorMsg: name + ': ' + error.message})
+    }
   getPicture() {
-    alert('native capture');
+    // alert('native capture');
     // console.log(navigator.device.capture);
-    console.log(navigator.camera);
+    // console.log(navigator.camera);
     const cameraOptions = {
       quality: 95,
       allowEdit: true,
-      destinationType: navigator.camera.DestinationType.DATA_URL
+      correctOrientation: true,
+      saveToPhotoAlbum: true, // stores all images in local photoalbum
+      cameraDirection: navigator.camera.Direction.FRONT, // use front camera
+      // sourceType: navigator.camera.PictureSourceType.CAMERA,
+      destinationType: navigator.camera.DestinationType.FILE_URI, // DATA_URL 
     }
-    navigator.camera.getPicture(this.cameraSuccess, this.cameraError)
+    navigator.camera.getPicture(this.nativeCameraSuccess, this.nativeCameraError)
   }
-    cameraSuccess(imageData) {
-      console.log(imageData)
+    nativeCameraSuccess(imageURL) {
+      console.log(imageURL)
       // "data:" + "image/jpeg;base64," + imageData
+      this.setState({
+        submitBtnDisabled: false,
+        image: imageURL,
+      })
     }
-    cameraError(message) {
-      alert('Failed: ' + message)
+    nativeCameraError(message) {
+      console.error('Failed: ' + message)
+      this.setState({submitBtnDisabled: true})
     }
-  capture() {
+  onCaptureClick() {
     // on Desktop, use the WebRTC stream
     if (Device.desktop) {
+
+      // on desktop, use webrtc
       const videoNode = this.videoRef.current
       const canvasNode = this.canvasRef.current
       canvasNode.width = videoNode.videoWidth
       canvasNode.height = videoNode.videoHeight
       canvasNode.getContext('2d').drawImage(videoNode, 0, 0, canvasNode.width, canvasNode.height)
+
+      const theCanvas = this.canvasRef.current
+      const selfie = theCanvas.toDataURL("image/jpeg")
+
+      // store the image and
       // enable the submit button
-      this.setState({submitBtnDisabled: false})
+      this.setState({
+        image: selfie,
+        submitBtnDisabled: false,
+      })
+
     } else {
+
       // on mobile, use native capture
       this.getPicture()
+
     }
   }
-  // drawText() {
-  //     const videoNode = this.videoRef.current
-  //     const canvasNode = this.canvasRef.current
-  //     const context = canvasNode.getContext('2d')
-  //     canvasNode.width = videoNode.width
-  //     canvasNode.height = videoNode.height
-  //     context.font = "50px Arial";
-  //     context.fillStyle = "white";
-  //     context.textAlign = "center";
-  //     context.fillText("Click the Capture Button", canvasNode.width/2, canvasNode.height/2);
-  // }
   resetCapture() {
     if (Device.desktop) {
       const canvasNode = this.canvasRef.current
       const context = canvasNode.getContext('2d')
       context.clearRect(0, 0, canvasNode.width, canvasNode.height)
-      // this.drawText()
-      this.setState({submitBtnDisabled: true})
-    } else {
-      alert('TODO: reset')
     }
+    this.setState({
+      image: null,
+      submitBtnDisabled: true,
+    })
   }
   componentDidMount() {
-    // this.drawText()
     console.log('Device', Device)
     if (Device.desktop) {
+      // on Desktop, start streaming video
       this.activateWebStream()
-    } else {
-      // alert('TODO: acquireImage on mobile')
     }
   }
   render() {
-    const { submitBtnDisabled, errorMsg } = this.state
+    const { submitBtnDisabled, errorMsg, image } = this.state
     return (
       <Block id="webcam-video">
 
@@ -171,23 +193,24 @@ export default class ImageComponent extends React.Component {
           </Block>
         }
 
+        {
+          !Device.desktop && image &&
+          <div style={styles.center}>
+            <img src={image} style={styles.mobileImg} alt="" />
+          </div>
+        }
+
         <div style={{display: errorMsg ? 'block' : 'none'}} id="errorMsg">{errorMsg}</div>
 
-        <Block>
-          <Row>
-            <Col width="33"></Col>
-            <Col width="33">
-              <Button onClick={this.capture} outline>
-                <Icon f7="camera_round" / > Capture
-              </Button>
-            </Col>
-            <Col width="33"></Col>
-          </Row>
-        </Block>
+        <CaptureButton
+          buttonText="Take Picture"
+          icon="camera_round"
+          onCaptureClick={this.onCaptureClick}
+        />
 
         <Row>
-          <Col width="33"></Col>
-          <Col width="33">
+          <Col width="20"></Col>
+          <Col width="60">
             <Button
               fill
               disabled={submitBtnDisabled}
@@ -195,12 +218,10 @@ export default class ImageComponent extends React.Component {
             >
               Submit
             </Button>
-            <div>
-              Clicking this button will submit your image to the artist
-            </div>
           </Col>
-          <Col width="33"></Col>
+          <Col width="20"></Col>
         </Row>
+        <div>Clicking this button will submit your image to the artist</div>
 
       </Block>
     ) 

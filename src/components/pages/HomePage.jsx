@@ -8,7 +8,7 @@ import {
 } from 'framework7-react'
 
 import Image          from '../feedbacks/Image'
-// import Video          from '../components/feedbacks/Video'
+import Video          from '../feedbacks/Video'
 // import Reaction       from '../components/feedbacks/Reaction'
 // // import Visual         from '../components/feedbacks/Visual'
 import Question       from '../feedbacks/Question'
@@ -83,6 +83,7 @@ export default class RatingPage extends React.Component {
       console.error("WS: WebSocket connection error:", event);
       this.setState({connectionError: true})
     }.bind(this)
+    // TODO
     // this.mySocket.onclose = function (event) {
     //   console.error('WS: WebSocket connection closed')
     //   console.info(event)
@@ -117,9 +118,9 @@ export default class RatingPage extends React.Component {
       case 'image':
         return <Image artworkID={artworkID} feedback={feedback} send={this.refresh} />
         break
-      // case 'video':
-      //   return <Video artworkID={artworkID} feedback={feedback} send={this.refresh} />
-      //   break
+      case 'video':
+        return <Video artworkID={artworkID} feedback={feedback} send={this.refresh} />
+        break
       // case 'reaction':
       //   return <Reaction artworkID={artworkID} feedback={feedback} send={this.refresh} />
       //   break

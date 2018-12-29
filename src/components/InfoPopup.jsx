@@ -20,7 +20,7 @@ export default class InfoDialog extends React.Component {
           <Page>
             <Navbar title="About">
               <NavRight>
-                <Link popupClose>Close</Link>
+                <Link popupClose><Icon f7="close"></Icon></Link>
               </NavRight>
             </Navbar>
             <Block>          
