@@ -21,7 +21,20 @@
     },
     "monaca-plugin-monaca-core": {
       "PACKAGE_NAME": "com.example.helloworld"
+    },
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "com.perdis.prototype"
+    },
+    "cordova-plugin-media-capture": {
+      "PACKAGE_NAME": "com.perdis.prototype"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.perdis.prototype"
     }
   },
-  "dependent_plugins": {}
+  "dependent_plugins": {
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.perdis.prototype"
+    }
+  }
 }

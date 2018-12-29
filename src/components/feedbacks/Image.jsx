@@ -94,6 +94,8 @@ export default class ImageComponent extends React.Component {
   }
   getPicture() {
     alert('native capture');
+    // console.log(navigator.device.capture);
+    console.log(navigator.camera);
     const cameraOptions = {
       quality: 95,
       allowEdit: true,
@@ -106,7 +108,7 @@ export default class ImageComponent extends React.Component {
       // "data:" + "image/jpeg;base64," + imageData
     }
     cameraError(message) {
-      alert('Failed because: ' + message)
+      alert('Failed: ' + message)
     }
   capture() {
     // on Desktop, use the WebRTC stream
@@ -151,8 +153,7 @@ export default class ImageComponent extends React.Component {
     if (Device.desktop) {
       this.activateWebStream()
     } else {
-      alert('TODO: acquireImage on mobile')
-      // this.getPicture()
+      // alert('TODO: acquireImage on mobile')
     }
   }
   render() {
@@ -162,10 +163,13 @@ export default class ImageComponent extends React.Component {
 
         <p>Send a selfie to the artist!</p>
 
-        <Block>
-            <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={'autoplay'} playsInline={true}></video>
-            <canvas id="canvas" ref={this.canvasRef} style={styles.img}></canvas>
-        </Block>
+        {
+          Device.desktop &&
+          <Block>
+              <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={'autoplay'} playsInline={true}></video>
+              <canvas id="canvas" ref={this.canvasRef} style={styles.img}></canvas>
+          </Block>
+        }
 
         <div style={{display: errorMsg ? 'block' : 'none'}} id="errorMsg">{errorMsg}</div>
 
