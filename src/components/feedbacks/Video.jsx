@@ -14,8 +14,8 @@ const styles = {
 }
 
 
-const StartButtonTxt = function () { return <span><Icon fa="play"></Icon> Start Recording</span> }
-const StopButtonTxt  = function () { return <span><Icon fa="stop"></Icon> Stop Recording</span> }
+const StartButtonTxt = function () { return <span><Icon fa="video"></Icon> Record video</span> }
+const ReStartButtonTxt  = function () { return <span><Icon fa="video"></Icon> Record different video</span> }
 
 
 export default class VideoComponent extends React.Component {
@@ -35,7 +35,6 @@ export default class VideoComponent extends React.Component {
     this.startRecording = this.startRecording.bind(this)
     this.captureSuccess = this.captureSuccess.bind(this)
     this.captureError = this.captureError.bind(this)
-    // this.state.buttonAction = this.state.buttonAction.bind(this)
   }
   submit() {
     const { send, artworkID } = this.props
@@ -54,6 +53,7 @@ export default class VideoComponent extends React.Component {
     this.setState({
       video: null,
       submitBtnDisabled: true,
+      buttonTxt: <StartButtonTxt />,
     })
   }
   startRecording() {
@@ -77,12 +77,15 @@ export default class VideoComponent extends React.Component {
       // size:39525
       // start:0
       // type:"video/mp4"
-      this.setState({
-        video: mediaFiles[0],
-        submitBtnDisabled: false,
-      });
+      if (mediaFiles.length === 1) {
+        this.setState({
+          video: mediaFiles[0],
+          submitBtnDisabled: false,
+          buttonTxt: <ReStartButtonTxt />,
+        })
+      }
     }
-    captureError () {
+    captureError (error) {
       //navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
       alert('Capture Error. Error code: ' + error.code);
     }
@@ -90,7 +93,7 @@ export default class VideoComponent extends React.Component {
     if (Device.desktop) {
       return (<Block>Can't preview this feedback type in the browser.</Block>)
     }
-    const { video } = this.state
+    const { video, buttonTxt } = this.state
     return (
       <Block id="webcam-video">
 
@@ -98,31 +101,44 @@ export default class VideoComponent extends React.Component {
 
         {
           video && video.fullPath &&
-          <Block>
-            <video src={video.fullPath} id="video" style={styles.video} playsInline={true} autoPlay={true} muted={true}></video>
-          </Block>
+            <Block>
+              <video
+                id="video"
+                style={styles.video}
+                controls="controls"
+                playsInline="playsInline"
+                autoPlay="autoPlay"
+                muted="muted"
+              >
+                <source src={video.fullPath} type={video.type} />
+              </video>
+            </Block>
         }
 
         <div id="errorMsg"></div>
 
         <CaptureButton
-          buttonText="Take Video"
-          icon="camera_round"
+          buttonText={buttonTxt}
+          icon="video"
           onCaptureClick={this.startRecording}
         />
 
+{/*
         <Row>
-          <Col width="33"></Col>
-          <Col width="33">
+          <Col width="10"></Col>
+          <Col width="80">
+*/}
             <Button fill
               onClick={this.submit}
               disabled={this.state.submitBtnDisabled}
             >
               Submit
             </Button>
+{/*
           </Col>
-          <Col width="33"></Col>
+          <Col width="10"></Col>
         </Row>
+*/}
         <div>Clicking this button will submit your video to the artist</div>
 
       </Block>
