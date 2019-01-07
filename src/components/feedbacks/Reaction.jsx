@@ -48,7 +48,7 @@ export default class ReactionComponent extends React.Component {
   submit() {
     const { send, artworkID } = this.props
     const feedback = {
-      type: 'video',
+      type: 'reaction',
       id: artworkID,
     }
     // const blob = new Blob(this.recordedBlobs, {type: 'video/webm'})
@@ -57,6 +57,17 @@ export default class ReactionComponent extends React.Component {
     // const buff = window.URL.createObjectURL(superBuffer)
     // feedback.payload = buff
     feedback.payload = this.stream
+    send(feedback)
+    // unload video and stream
+    this.resetVideo()
+  }
+  skip() {
+    const { send, artworkID } = this.props
+    const feedback = {
+      type: 'reaction',
+      id: artworkID,
+    }
+    feedback.payload = "skip"
     send(feedback)
     // unload video and stream
     this.resetVideo()
@@ -221,8 +232,8 @@ export default class ReactionComponent extends React.Component {
 
         <Block style={{display: videoVisible ? 'block' : 'none'}}>
           <Row>
-            <Col width="33"></Col>
-            <Col width="33">
+            <Col width="20"></Col>
+            <Col width="30">
               <Button fill
                 onClick={this.submit}
                 disabled={this.state.submitBtnDisabled}
@@ -230,9 +241,16 @@ export default class ReactionComponent extends React.Component {
                 Submit
               </Button>
             </Col>
-            <Col width="33"></Col>
+            <Col width="30">
+              <Button fill
+                onClick={this.skip}
+              >
+                Skip
+              </Button>
+            </Col>
+            <Col width="20"></Col>
           </Row>
-          <div>Clicking this button will submit your video to the artist</div>
+          <div>Clicking the submit button will submit your video to the artist</div>
         </Block>
 
       </Block>

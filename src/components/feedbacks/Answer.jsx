@@ -49,11 +49,12 @@ export default class AnswerComponent extends React.Component {
   }
   render () {
     const { answer, submitBtnDisabled } = this.state
+    const { feedback } = this.props
     return (
       <Block>
-        <h2>Answer this question from the artist:</h2>
+        <h2>{feedback.instructions}</h2>
         <p>
-          What is 2 + 2? [TODO: PUT A WITTY QUESTION HERE]
+          {feedback.content}
         </p>
           <List noHairlines>
             <Input
