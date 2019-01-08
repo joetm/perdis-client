@@ -4,8 +4,7 @@ import { Device } from 'framework7'
 
 const styles = {
   video: {
-    width:'480px',
-    height:'360px',
+    maxWidth: '100%',
     border: '1px solid #000000',
     marginLeft: '10px',
     backgroundColor: '#303030',
@@ -22,6 +21,26 @@ const cameraOptions = {
     width:  1280,
     height: 720,
   }
+}
+
+function getMediaRecorderOptions () {
+  let options = {mimeType: 'video/webm;codecs=vp9'}
+  if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+    console.error(`${options.mimeType} is not Supported`);
+    // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
+    options = {mimeType: 'video/webm;codecs=vp8'};
+    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      console.error(`${options.mimeType} is not Supported`);
+      // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
+      options = {mimeType: 'video/webm'};
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        console.error(`${options.mimeType} is not Supported`);
+        // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
+        options = {mimeType: ''};
+      }
+    }
+  }
+  return options;
 }
 
 /* globals MediaRecorder */
@@ -74,22 +93,14 @@ export default class ReactionComponent extends React.Component {
       type: 'reaction',
       id: artworkID,
     }
-    // TODO: store payload
 
-    // const blob = new Blob(this.recordedBlobs, {type: 'video/webm'})
-    // feedback.payload = blob
-    // const superBuffer = new Blob(this.stream, {type: 'video/webm'})
-    // const buff = window.URL.createObjectURL(superBuffer)
-    // feedback.payload = buff
+    // alternative: just store some metadata
+    // feedback.payload = JSON.stringify(this.stream)
 
+    const options = getMediaRecorderOptions();
+    const blob = new Blob(this.recordedBlobs, options)
+    feedback.payload = blob
 
-
-
-
-
-
-
-    // feedback.payload = this.stream
     send(feedback)
     // unload video and stream
     this.resetVideo()
@@ -166,22 +177,7 @@ export default class ReactionComponent extends React.Component {
     }
   startBuffer() {
     const recordedNode = this.recordedRef.current
-    let options = {mimeType: 'video/webm;codecs=vp9'}
-    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-      console.error(`${options.mimeType} is not Supported`);
-      // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-      options = {mimeType: 'video/webm;codecs=vp8'};
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        console.error(`${options.mimeType} is not Supported`);
-        // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-        options = {mimeType: 'video/webm'};
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-          console.error(`${options.mimeType} is not Supported`);
-          // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-          options = {mimeType: ''};
-        }
-      }
-    }
+    const options = getMediaRecorderOptions();
     try {
       this.mediaRecorder = new MediaRecorder(this.stream, options)
     } catch (e) {
@@ -222,6 +218,8 @@ export default class ReactionComponent extends React.Component {
 
     recordedNode.onloadedmetadata = function(e) {
       console.log("video loaded", e)
+      console.log('width is',  this.videoWidth);
+      console.log('height is', this.videoHeight);
       recordedNode.controls = true
       recordedNode.play()
     }
