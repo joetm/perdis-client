@@ -130,15 +130,15 @@ export default class ReactionComponent extends React.Component {
     })
   }
   activateStream() {
-    if (Device.desktop) {
-      console.log('activateStream:WEB')
+    // if (Device.desktop) {
+      // console.log('activateStream:WEB')
       // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
       navigator.mediaDevices.getUserMedia(cameraOptions).then(
         this.handleStreamSuccess
       ).catch(
         this.handleStreamError
       )
-    } else {
+    // } else {
       // request permissions
       // cordova.plugins.diagnostic.requestCameraAuthorization(
       //   function (status) {
@@ -150,11 +150,11 @@ export default class ReactionComponent extends React.Component {
       //         console.error("getUserMedia not available");
       //       }
             // https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-media-capture/
-            navigator.device.capture.captureVideo(
-              this.handleStreamSuccess,
-              this.handleStreamError,
-              cameraOptions
-            )
+            // navigator.device.capture.captureVideo(
+            //   this.handleStreamSuccess,
+            //   this.handleStreamError,
+            //   cameraOptions
+            // )
       //     } else {
       //       // permission denied - inform user
       //       console.error("Permission was denied")
@@ -163,7 +163,7 @@ export default class ReactionComponent extends React.Component {
       //       console.error("Permission Error: " + error);
       //   }, false
       // )
-    }// if (Device.desktop)
+    // }// if (Device.desktop)
   }
     handleStreamSuccess(stream) {
       console.log('getUserMedia() got stream:', stream)
@@ -175,6 +175,7 @@ export default class ReactionComponent extends React.Component {
     }
     handleStreamError(error) {
       console.error('navigator.getUserMedia error: ', error)
+      console.log(error.code, error.name, error.message)
     }
   // handleDataAvailable(event) {
   //   if (event.data && event.data.size > 0) {

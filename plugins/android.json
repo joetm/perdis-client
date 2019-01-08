@@ -27,9 +27,6 @@
     },
     "cordova-plugin-camera": {
       "PACKAGE_NAME": "com.perdis.prototype"
-    },
-    "cordova.plugins.diagnostic": {
-      "PACKAGE_NAME": "com.perdis.prototype"
     }
   },
   "dependent_plugins": {

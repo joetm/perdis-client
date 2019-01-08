@@ -6,6 +6,7 @@ import {
   List, ListItem, Row, Col, Button,
   ListInput, Input, Label
 } from 'framework7-react'
+import { Device } from 'framework7'
 
 import Image          from '../feedbacks/Image'
 import Video          from '../feedbacks/Video'
@@ -36,6 +37,8 @@ const styles = {
     align: 'center',
   },
 }
+
+
 
 
 export default class RatingPage extends React.Component {

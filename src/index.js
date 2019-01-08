@@ -8,6 +8,9 @@ import Framework7 from 'framework7/framework7.esm.bundle';
 // Import Framework7-React plugin
 import Framework7React from 'framework7-react';
 
+//webrtc shim
+import "webrtc-adapter/out/adapter.js";
+
 // Import main App component
 import App from './components/App.jsx';
 
@@ -29,6 +32,31 @@ import {AppContainer} from 'react-hot-loader';
 // Init Framework7-React plugin
 Framework7.use(Framework7React);
 
+
+function permRequest (target) {
+  return new Promise(function(resolve, reject) {
+    cordova.plugins.permissions.hasPermission(target, function (status) {
+      if (!status.hasPermission) {
+        // need to request camera permission
+        cordova.plugins.permissions.requestPermission(target,
+          function (status) {
+            if (!status.hasPermission) {
+              console.error('permission denied', status)
+              reject(status)
+            }
+            resolve(status)
+          },
+          function (error) {
+            console.error('permission error', error)
+            reject(error)
+          },
+        )
+      }
+    })
+  })
+}
+
+
 // Mount React App
 const startApp = () => {
   const rootElement = document.getElementById('app');
@@ -40,12 +68,22 @@ const startApp = () => {
   );
 } //
 
+function cordovaReady () {
+  // force permission requests on startup
+  const permissions = cordova.plugins.permissions
+  const promise1 = permRequest(permissions.CAMERA)
+  const promise2 = permRequest(permissions.RECORD_AUDIO)
+  Promise.all([promise1, promise2]).then(function(values) {
+    startApp()
+  })
+}
+
 if (!window.cordova) {
   // browser
   startApp();
 } else {
   // cordova
-  document.addEventListener('deviceready', startApp, false);
+  document.addEventListener('deviceready', cordovaReady, false);
 }
 
 if (module.hot) {
