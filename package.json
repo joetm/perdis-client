@@ -29,6 +29,7 @@
     "dev": "webpack-serve --open",
     "build": "webpack --mode production",
     "mobile": "cordova clean && monaca transpile && monaca build && adb uninstall com.perdis.prototype && adb install ./platforms/android/build/outputs/apk/android-debug.apk",
+    "initial-mobile": "cordova clean && monaca transpile && monaca build && adb install ./platforms/android/build/outputs/apk/android-debug.apk",
     "watch": "webpack --watch --mode production",
     "copy-fonts": "cpy node_modules/framework7-icons/fonts/*.* src/fonts && cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} src/fonts",
     "prepare": "npm run copy-fonts"

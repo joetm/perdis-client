@@ -61,6 +61,7 @@ export default class ImageComponent extends React.Component {
       this.handleStreamError = this.handleStreamError.bind(this)
   }
   submit() {
+    console.log("submitting feedback")
     const { send, artworkID } = this.props
     const { image } = this.state
     const feedback = {

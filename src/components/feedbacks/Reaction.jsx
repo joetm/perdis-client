@@ -11,7 +11,7 @@ const styles = {
   }
 }
 
-const TIMEOUT = 3000; // 10000
+const TIMEOUT = 10000;
 
 /* globals MediaRecorder */
 
@@ -29,11 +29,13 @@ export default class ReactionComponent extends React.Component {
     this.state = {
       submitBtnDisabled: true,
       videoVisible: false,
+      artworkID: false,
     }
     // ---
     this.recordedRef = React.createRef()
     // ---
     this.submit = this.submit.bind(this)
+    this.skip = this.skip.bind(this)
     this.handleSuccess = this.handleSuccess.bind(this)
     this.handleError = this.handleError.bind(this)
     this.activateStream = this.activateStream.bind(this)
@@ -44,6 +46,14 @@ export default class ReactionComponent extends React.Component {
     // this.handleDataAvailable = this.handleDataAvailable.bind(this)
     // this.handleSourceOpen = this.handleSourceOpen.bind(this)
     this.startTimer = this.startTimer.bind(this)
+  }
+  componentWillReceiveProps(nextProps) {
+    // (re-)activate the recording when artwork changes
+    console.info("componentWillReceiveProps")
+    if (!this.state.artworkID || nextProps.artworkID !== this.state.artworkID) {
+      this.setState({artworkID: nextProps.artworkID})
+      this.activateStream()
+    }
   }
   submit() {
     const { send, artworkID } = this.props
