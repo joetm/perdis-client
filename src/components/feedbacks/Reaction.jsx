@@ -1,5 +1,6 @@
 import React from 'react'
 import { Block, Row, Col, Button, Preloader } from 'framework7-react'
+import { Device } from 'framework7'
 
 const styles = {
   video: {
@@ -11,7 +12,19 @@ const styles = {
   }
 }
 
-const TIMEOUT = 10000;
+const TIMEOUT = 3000; // 10000;
+
+const hasEchoCancellation = true
+const cameraOptions = {
+  audio: {
+    echoCancellation: {exact: hasEchoCancellation}
+  },
+  video: {
+    facingMode: "user", // front camera
+    width: 1280,
+    height: 720,
+  }
+}
 
 /* globals MediaRecorder */
 
@@ -36,9 +49,9 @@ export default class ReactionComponent extends React.Component {
     // ---
     this.submit = this.submit.bind(this)
     this.skip = this.skip.bind(this)
-    this.handleSuccess = this.handleSuccess.bind(this)
-    this.handleError = this.handleError.bind(this)
     this.activateStream = this.activateStream.bind(this)
+      this.handleStreamSuccess = this.handleStreamSuccess.bind(this)
+      this.handleStreamError = this.handleStreamError.bind(this)
     this.resetVideo = this.resetVideo.bind(this)
     // this.start = this.start.bind(this)
     this.play = this.play.bind(this)
@@ -110,34 +123,49 @@ export default class ReactionComponent extends React.Component {
   resetVideo() {
     this.stream = null;
     const recordedNode = this.recordedRef.current
-    recordedNode.srcObject = null;
+    recordedNode.srcObject = null
+    recordedNode.src = null
     this.setState({
       videoVisible: false,
     })
   }
   activateStream() {
-    // this.resetVideo()
-    console.log('activateStream')
-    const hasEchoCancellation = true
-    const options = {
-      audio: {
-        echoCancellation: {exact: hasEchoCancellation}
-      },
-      video: {
-        facingMode: "user", // front camera
-        width: 1280,
-        height: 720,
-      }
-    }
-    // console.log('Using media constraints:', constraints)
-    // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-    navigator.mediaDevices.getUserMedia(options).then(
-      this.handleSuccess
-    ).catch(
-      this.handleError
-    )
+    if (Device.desktop) {
+      console.log('activateStream:WEB')
+      // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+      navigator.mediaDevices.getUserMedia(cameraOptions).then(
+        this.handleStreamSuccess
+      ).catch(
+        this.handleStreamError
+      )
+    } else {
+      // request permissions
+      cordova.plugins.diagnostic.requestCameraAuthorization(
+        function (status) {
+          console.log('activateStream:Android')
+          console.log("Camera status", status)
+          if(status === cordova.plugins.diagnostic.permissionStatus.GRANTED){
+            // this.resetVideo()
+            if (!navigator.mediaDevices.getUserMedia) {
+              console.error("getUserMedia not available");
+            }
+            // https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-media-capture/
+            navigator.device.capture.captureVideo(
+              this.handleStreamSuccess,
+              this.handleStreamError,
+              cameraOptions
+            )
+          } else {
+            // permission denied - inform user
+            console.error("Permission was denied")
+          }
+        }, function(error){
+            console.error("Permission Error: " + error);
+        }, false
+      )
+    }// if (Device.desktop)
   }
-    handleSuccess(stream) {
+    handleStreamSuccess(stream) {
       console.log('getUserMedia() got stream:', stream)
       // window.stream = stream // make stream available to browser console
       this.stream = stream // make stream available so that it can be stopped later
@@ -145,7 +173,7 @@ export default class ReactionComponent extends React.Component {
       // videoNode.srcObject = stream
       this.startTimer()
     }
-    handleError(error) {
+    handleStreamError(error) {
       console.error('navigator.getUserMedia error: ', error)
     }
   // handleDataAvailable(event) {
@@ -199,7 +227,8 @@ export default class ReactionComponent extends React.Component {
     // recordedNode.play()
     const recordedNode = this.recordedRef.current
     console.log('this.stream', this.stream);
-    recordedNode.srcObject = this.stream;
+    // recordedNode.srcObject = this.stream;
+    recordedNode.src = window.URL.createObjectURL(this.stream);
     recordedNode.onloadedmetadata = function(e) {
       recordedNode.play();
     };

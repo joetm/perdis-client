@@ -30,13 +30,23 @@ import {AppContainer} from 'react-hot-loader';
 Framework7.use(Framework7React);
 
 // Mount React App
-const rootElement = document.getElementById('app');
-ReactDOM.render(
-  <AppContainer>
-    <App />
-  </AppContainer>,
-  rootElement
-);
+const startApp = () => {
+  const rootElement = document.getElementById('app');
+  ReactDOM.render(
+    <AppContainer>
+      <App />
+    </AppContainer>,
+    rootElement
+  );
+} //
+
+if (!window.cordova) {
+  // browser
+  startApp();
+} else {
+  // cordova
+  document.addEventListener('deviceready', startApp, false);
+}
 
 if (module.hot) {
   module.hot.accept('./components/App', () => {
