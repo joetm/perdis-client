@@ -71,10 +71,34 @@ const startApp = () => {
 function cordovaReady () {
   // force permission requests on startup
   const permissions = cordova.plugins.permissions
-  const promise1 = permRequest(permissions.CAMERA)
-  const promise2 = permRequest(permissions.RECORD_AUDIO)
-  Promise.all([promise1, promise2]).then(function(values) {
-    startApp()
+  const list = [
+    permissions.CAMERA,
+    permissions.RECORD_AUDIO
+  ]
+  permissions.checkPermission(list, function (status) {
+    if( !status.hasPermission ) {
+      permissions.requestPermissions(
+        list,
+        // success
+        function(status) {
+          // if( !status.hasPermission ) {
+          //   console.warn('Camera and/or Audio permission is not turned on');
+          // }
+          console.log("Permission granted. Starting react.")
+          startApp()
+        },
+        // error
+        function () {
+          console.warn('Camera and/or Audio permission is not turned on');
+        }
+      )
+    } else {
+      // permission already granted
+      console.log("Permission already granted. Starting react.")
+      startApp()
+    }
+  }, function () {
+    console.warn('Camera and/or Audio permission is not turned on');
   })
 }
 
