@@ -4,8 +4,9 @@ import { Device } from 'framework7'
 
 const styles = {
   video: {
-    width:'480px',
-    height:'360px',
+    // width:'480px',
+    // height:'360px',
+    maxWidth: '100%',
     border: '1px solid #000000',
     marginLeft: '10px',
     backgroundColor: '#303030',
@@ -16,12 +17,10 @@ const TIMEOUT = 3000; // 10000;
 
 const hasEchoCancellation = true
 const cameraOptions = {
-  audio: {
-    echoCancellation: {exact: hasEchoCancellation}
-  },
+  audio: false, // { echoCancellation: {exact: hasEchoCancellation} },
   video: {
     facingMode: "user", // front camera
-    width: 1280,
+    width:  1280,
     height: 720,
   }
 }
@@ -102,10 +101,10 @@ export default class ReactionComponent extends React.Component {
       console.log('this.stream', this.stream)
       const tracks = this.stream.getTracks()
       console.log('tracks', tracks)
-      // stop audio
-      tracks[0].stop()
-      // stop video
-      tracks[1].stop()
+      // stop all tracks
+      for (let t = 0; t < tracks.length; t++) {
+        tracks[t].stop()
+      }
       // update UI
       this.setState({
         videoVisible: true,
@@ -130,47 +129,16 @@ export default class ReactionComponent extends React.Component {
     })
   }
   activateStream() {
-    // if (Device.desktop) {
-      // console.log('activateStream:WEB')
-      // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-      navigator.mediaDevices.getUserMedia(cameraOptions).then(
-        this.handleStreamSuccess
-      ).catch(
-        this.handleStreamError
-      )
-    // } else {
-      // request permissions
-      // cordova.plugins.diagnostic.requestCameraAuthorization(
-      //   function (status) {
-      //     console.log('activateStream:Android')
-      //     console.log("Camera status", status)
-      //     if(status === cordova.plugins.diagnostic.permissionStatus.GRANTED){
-      //       // this.resetVideo()
-      //       if (!navigator.mediaDevices.getUserMedia) {
-      //         console.error("getUserMedia not available");
-      //       }
-            // https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-media-capture/
-            // navigator.device.capture.captureVideo(
-            //   this.handleStreamSuccess,
-            //   this.handleStreamError,
-            //   cameraOptions
-            // )
-      //     } else {
-      //       // permission denied - inform user
-      //       console.error("Permission was denied")
-      //     }
-      //   }, function(error){
-      //       console.error("Permission Error: " + error);
-      //   }, false
-      // )
-    // }// if (Device.desktop)
+    // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+    navigator.mediaDevices.getUserMedia(cameraOptions).then(
+      this.handleStreamSuccess
+    ).catch(
+      this.handleStreamError
+    )
   }
     handleStreamSuccess(stream) {
       console.log('getUserMedia() got stream:', stream)
-      // window.stream = stream // make stream available to browser console
       this.stream = stream // make stream available so that it can be stopped later
-      // const videoNode = this.videoRef.current
-      // videoNode.srcObject = stream
       this.startTimer()
     }
     handleStreamError(error) {
@@ -227,11 +195,18 @@ export default class ReactionComponent extends React.Component {
     // recordedNode.controls = true
     // recordedNode.play()
     const recordedNode = this.recordedRef.current
-    console.log('this.stream', this.stream);
-    // recordedNode.srcObject = this.stream;
-    recordedNode.src = window.URL.createObjectURL(this.stream);
+    recordedNode.src = null
+    recordedNode.srcObject = null
+    console.log('this.stream', this.stream)
+    try {
+      recordedNode.srcObject = this.stream
+    } catch (error) {
+      recordedNode.src = window.URL.createObjectURL(this.stream)
+    }
     recordedNode.onloadedmetadata = function(e) {
-      recordedNode.play();
+      console.log("video loaded", e)
+      recordedNode.controls = true
+      recordedNode.play()
     };
   }
   stop() {
@@ -252,8 +227,9 @@ export default class ReactionComponent extends React.Component {
                 style={styles.video}
                 id="recorded"
                 ref={this.recordedRef}
-                muted={true}
-                loop={true}
+                muted
+                loop
+                autoplay
               ></video>
             </Block>
         }
@@ -282,11 +258,7 @@ export default class ReactionComponent extends React.Component {
               </Button>
             </Col>
             <Col width="30">
-              <Button fill
-                onClick={this.skip}
-              >
-                Skip
-              </Button>
+              <Button fill onClick={this.skip}>Skip</Button>
             </Col>
             <Col width="20"></Col>
           </Row>
