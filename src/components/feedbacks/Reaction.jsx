@@ -4,9 +4,8 @@ import { Device } from 'framework7'
 
 const styles = {
   video: {
-    // width:'480px',
-    // height:'360px',
-    maxWidth: '100%',
+    width:'480px',
+    height:'360px',
     border: '1px solid #000000',
     marginLeft: '10px',
     backgroundColor: '#303030',
@@ -30,11 +29,11 @@ const cameraOptions = {
 export default class ReactionComponent extends React.Component {
   constructor(props) {
     super(props)
-    // this.recordedBlobs = []
-    // this.mediaSource = new MediaSource()
-    // this.mediaSource.addEventListener('sourceopen', this.handleSourceOpen, false)
-    // this.mediaRecorder
-    // this.sourceBuffer
+    this.recordedBlobs = []
+    this.mediaSource = new MediaSource()
+    this.mediaSource.addEventListener('sourceopen', this.handleSourceOpen, false)
+    this.mediaRecorder
+    this.sourceBuffer
     // ---
     this.stream
     // ---
@@ -48,16 +47,18 @@ export default class ReactionComponent extends React.Component {
     // ---
     this.submit = this.submit.bind(this)
     this.skip = this.skip.bind(this)
+    // ---
     this.activateStream = this.activateStream.bind(this)
       this.handleStreamSuccess = this.handleStreamSuccess.bind(this)
       this.handleStreamError = this.handleStreamError.bind(this)
     this.resetVideo = this.resetVideo.bind(this)
-    // this.start = this.start.bind(this)
-    this.play = this.play.bind(this)
+    this.playBack = this.playBack.bind(this)
     this.stop = this.stop.bind(this)
-    // this.handleDataAvailable = this.handleDataAvailable.bind(this)
-    // this.handleSourceOpen = this.handleSourceOpen.bind(this)
     this.startTimer = this.startTimer.bind(this)
+    // ---
+    this.startBuffer = this.startBuffer.bind(this)
+    this.handleDataAvailable = this.handleDataAvailable.bind(this)
+    this.handleSourceOpen = this.handleSourceOpen.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     // (re-)activate the recording when artwork changes
@@ -73,12 +74,22 @@ export default class ReactionComponent extends React.Component {
       type: 'reaction',
       id: artworkID,
     }
+    // TODO: store payload
+
     // const blob = new Blob(this.recordedBlobs, {type: 'video/webm'})
     // feedback.payload = blob
     // const superBuffer = new Blob(this.stream, {type: 'video/webm'})
     // const buff = window.URL.createObjectURL(superBuffer)
     // feedback.payload = buff
-    feedback.payload = this.stream
+
+
+
+
+
+
+
+
+    // feedback.payload = this.stream
     send(feedback)
     // unload video and stream
     this.resetVideo()
@@ -111,19 +122,20 @@ export default class ReactionComponent extends React.Component {
         submitBtnDisabled: false,
       })
       // play the video
-      this.play()
+      this.playBack()
     }, TIMEOUT)
   }
-  // handleSourceOpen(event) {
-  //   console.log('MediaSource opened')
-  //   this.sourceBuffer = this.mediaSource.addSourceBuffer('video/webm; codecs="vp8"')
-  //   console.log('Source buffer: ', this.sourceBuffer)
-  // }
+  handleSourceOpen(event) {
+    console.log('MediaSource opened')
+    this.sourceBuffer = this.mediaSource.addSourceBuffer('video/webm; codecs="vp8"')
+    console.log('Source buffer: ', this.sourceBuffer)
+  }
   resetVideo() {
     this.stream = null;
     const recordedNode = this.recordedRef.current
     recordedNode.srcObject = null
     recordedNode.src = null
+    recordedNode.controls = false
     this.setState({
       videoVisible: false,
     })
@@ -145,69 +157,72 @@ export default class ReactionComponent extends React.Component {
       console.error('navigator.getUserMedia error: ', error)
       console.log(error.code, error.name, error.message)
     }
-  // handleDataAvailable(event) {
-  //   if (event.data && event.data.size > 0) {
-  //     this.recordedBlobs.push(event.data)
-  //   }
-  // }
-  // start() {
-  //   const recordedNode = this.recordedRef.current
-
-  //   let options = {mimeType: 'video/webm;codecs=vp9'}
-  //   if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-  //     console.error(`${options.mimeType} is not Supported`);
-  //     // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-  //     options = {mimeType: 'video/webm;codecs=vp8'};
-  //     if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-  //       console.error(`${options.mimeType} is not Supported`);
-  //       // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-  //       options = {mimeType: 'video/webm'};
-  //       if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-  //         console.error(`${options.mimeType} is not Supported`);
-  //         // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-  //         options = {mimeType: ''};
-  //       }
-  //     }
-  //   }
-  //   try {
-  //     this.mediaRecorder = new MediaRecorder(window.stream, options)
-  //   } catch (e) {
-  //     console.error('Exception while creating MediaRecorder:', e)
-  //     // errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(e)}`
-  //     return
-  //   }
-  //   console.log('Created MediaRecorder', this.mediaRecorder, 'with options', options)
-  //   // recordButton.textContent = 'Stop Recording';
-  //   // playButton.disabled = true;
-  //   this.mediaRecorder.onstop = function (event) {
-  //     console.log('Recorder stopped: ', event)
-  //   };
-  //   this.mediaRecorder.ondataavailable = this.handleDataAvailable
-  //   this.mediaRecorder.start(10) // collect 10ms of data
-  //   console.log('MediaRecorder started', this.mediaRecorder)
-  // }
-  play() {
-    // const recordedNode = this.recordedRef.current
-    // const superBuffer = new Blob(this.recordedBlobs, {type: 'video/webm'})
-    // recordedNode.src = null
-    // recordedNode.srcObject = null
-    // recordedNode.src = window.URL.createObjectURL(superBuffer)
-    // recordedNode.controls = true
-    // recordedNode.play()
+    handleDataAvailable(event) {
+      if (event.data && event.data.size > 0) {
+        this.recordedBlobs.push(event.data)
+      }
+    }
+  startBuffer() {
     const recordedNode = this.recordedRef.current
+    let options = {mimeType: 'video/webm;codecs=vp9'}
+    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      console.error(`${options.mimeType} is not Supported`);
+      // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
+      options = {mimeType: 'video/webm;codecs=vp8'};
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        console.error(`${options.mimeType} is not Supported`);
+        // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
+        options = {mimeType: 'video/webm'};
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+          console.error(`${options.mimeType} is not Supported`);
+          // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
+          options = {mimeType: ''};
+        }
+      }
+    }
+    try {
+      this.mediaRecorder = new MediaRecorder(window.stream, options)
+    } catch (e) {
+      console.error('Exception while creating MediaRecorder:', e)
+      return
+    }
+    console.log('Created MediaRecorder', this.mediaRecorder, 'with options', options)
+    // recordButton.textContent = 'Stop Recording';
+    // playButton.disabled = true;
+    this.mediaRecorder.onstop = function (event) {
+      console.log('Recorder stopped: ', event)
+    };
+    this.mediaRecorder.ondataavailable = this.handleDataAvailable
+    this.mediaRecorder.start(10) // collect 10ms of data
+    console.log('MediaRecorder started', this.mediaRecorder)
+  }
+  playBack() {
+    const recordedNode = this.recordedRef.current
+    const superBuffer = new Blob(this.recordedBlobs, {type: 'video/webm'})
+    console.log('this.stream', this.stream)
     recordedNode.src = null
     recordedNode.srcObject = null
-    console.log('this.stream', this.stream)
+
+    // recordedNode.src = window.URL.createObjectURL(superBuffer)
+    // recordedNode.play()
+
+    // try {
+    //   recordedNode.srcObject = this.stream
+    // } catch (error) {
+    //   recordedNode.src = window.URL.createObjectURL(this.stream)
+    // }
     try {
-      recordedNode.srcObject = this.stream
+      recordedNode.srcObject = superBuffer
     } catch (error) {
-      recordedNode.src = window.URL.createObjectURL(this.stream)
+      recordedNode.src = window.URL.createObjectURL(superBuffer)
     }
+
     recordedNode.onloadedmetadata = function(e) {
       console.log("video loaded", e)
       recordedNode.controls = true
       recordedNode.play()
-    };
+    }
+
   }
   stop() {
 
@@ -220,19 +235,16 @@ export default class ReactionComponent extends React.Component {
     return (
       <Block id="webcam-video">
 
-        {
-          videoVisible &&
-            <Block>
-              <video
-                style={styles.video}
-                id="recorded"
-                ref={this.recordedRef}
-                muted
-                loop
-                autoplay
-              ></video>
-            </Block>
-        }
+        <Block style={{display: videoVisible ? 'block' : 'none'}}>
+          <video
+            style={styles.video}
+            id="recorded"
+            ref={this.recordedRef}
+            muted={true}
+            loop={true}
+            autoplay={true}
+          ></video>
+        </Block>
 
         <div id="errorMsg"></div>
 
