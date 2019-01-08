@@ -140,29 +140,29 @@ export default class ReactionComponent extends React.Component {
       )
     } else {
       // request permissions
-      cordova.plugins.diagnostic.requestCameraAuthorization(
-        function (status) {
-          console.log('activateStream:Android')
-          console.log("Camera status", status)
-          if(status === cordova.plugins.diagnostic.permissionStatus.GRANTED){
-            // this.resetVideo()
-            if (!navigator.mediaDevices.getUserMedia) {
-              console.error("getUserMedia not available");
-            }
+      // cordova.plugins.diagnostic.requestCameraAuthorization(
+      //   function (status) {
+      //     console.log('activateStream:Android')
+      //     console.log("Camera status", status)
+      //     if(status === cordova.plugins.diagnostic.permissionStatus.GRANTED){
+      //       // this.resetVideo()
+      //       if (!navigator.mediaDevices.getUserMedia) {
+      //         console.error("getUserMedia not available");
+      //       }
             // https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-media-capture/
             navigator.device.capture.captureVideo(
               this.handleStreamSuccess,
               this.handleStreamError,
               cameraOptions
             )
-          } else {
-            // permission denied - inform user
-            console.error("Permission was denied")
-          }
-        }, function(error){
-            console.error("Permission Error: " + error);
-        }, false
-      )
+      //     } else {
+      //       // permission denied - inform user
+      //       console.error("Permission was denied")
+      //     }
+      //   }, function(error){
+      //       console.error("Permission Error: " + error);
+      //   }, false
+      // )
     }// if (Device.desktop)
   }
     handleStreamSuccess(stream) {
