@@ -108,7 +108,8 @@ export default class ReactionComponent extends React.Component {
   startTimer() {
     setTimeout(() => {
       // stop recording
-      // this.mediaRecorder.stop()
+      console.log('this.mediaRecorder', this.mediaRecorder)
+      this.mediaRecorder.stop()
       console.log('this.stream', this.stream)
       const tracks = this.stream.getTracks()
       console.log('tracks', tracks)
@@ -151,7 +152,8 @@ export default class ReactionComponent extends React.Component {
     handleStreamSuccess(stream) {
       console.log('getUserMedia() got stream:', stream)
       this.stream = stream // make stream available so that it can be stopped later
-      this.startTimer()
+      this.startBuffer() // start recording the stream and filling the buffer
+      this.startTimer() // next things will happen after a timeout
     }
     handleStreamError(error) {
       console.error('navigator.getUserMedia error: ', error)
@@ -181,7 +183,7 @@ export default class ReactionComponent extends React.Component {
       }
     }
     try {
-      this.mediaRecorder = new MediaRecorder(window.stream, options)
+      this.mediaRecorder = new MediaRecorder(this.stream, options)
     } catch (e) {
       console.error('Exception while creating MediaRecorder:', e)
       return
@@ -206,6 +208,7 @@ export default class ReactionComponent extends React.Component {
     // recordedNode.src = window.URL.createObjectURL(superBuffer)
     // recordedNode.play()
 
+    // fallback: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject#Supporting_fallback_to_the_src_property
     // try {
     //   recordedNode.srcObject = this.stream
     // } catch (error) {
