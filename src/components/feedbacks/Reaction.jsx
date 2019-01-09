@@ -41,7 +41,7 @@ export default class ReactionComponent extends React.Component {
     this.state = {
       submitBtnDisabled: true,
       videoVisible: false,
-      artworkID: false,
+      artworkID: props.artworkID,
     }
     // ---
     this.recordedRef = React.createRef()
@@ -63,7 +63,7 @@ export default class ReactionComponent extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     // (re-)activate the recording when artwork changes
-    console.info("componentWillReceiveProps")
+    console.info("componentWillReceiveProps", "new:", nextProps.artworkID, "old:", this.state.artworkID)
     if (!this.state.artworkID || nextProps.artworkID !== this.state.artworkID) {
       this.setState({artworkID: nextProps.artworkID})
       this.activateStream()
@@ -83,9 +83,12 @@ export default class ReactionComponent extends React.Component {
     const blob = new Blob(this.recordedBlobs, options)
     feedback.payload = blob
 
-    send(feedback)
-    // unload video and stream
-    this.resetVideo()
+    const ret = send(feedback)
+    if (ret) {
+      // unload video and stream
+      this.resetVideo()
+      this.setState({artworkID: false})
+    }
   }
   skip() {
     const { send, artworkID } = this.props
@@ -94,18 +97,21 @@ export default class ReactionComponent extends React.Component {
       id: artworkID,
     }
     feedback.payload = "skip"
-    send(feedback)
-    // unload video and stream
-    this.resetVideo()
+    const ret = send(feedback)
+    if (ret) {
+      // unload video and stream
+      this.resetVideo()
+      this.setState({artworkID: false})
+    }
   }
   startTimer() {
     setTimeout(() => {
       // stop recording
       console.log('this.mediaRecorder', this.mediaRecorder)
       this.mediaRecorder.stop()
-      console.log('this.stream', this.stream)
+      // console.log('this.stream', this.stream)
       const tracks = this.stream.getTracks()
-      console.log('tracks', tracks)
+      // console.log('tracks', tracks)
       // stop all tracks
       for (let t = 0; t < tracks.length; t++) {
         tracks[t].stop()
@@ -132,6 +138,9 @@ export default class ReactionComponent extends React.Component {
     const recordedNode = this.recordedRef.current
     recordedNode.srcObject = null
     recordedNode.src = null
+    recordedNode.removeAttribute("srcObject")
+    recordedNode.removeAttribute("src")
+    recordedNode.load()
     recordedNode.controls = false
     this.setState({
       videoVisible: false,
