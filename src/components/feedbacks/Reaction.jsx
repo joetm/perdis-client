@@ -1,6 +1,7 @@
 import React from 'react'
 import { Block, Row, Col, Button, Preloader } from 'framework7-react'
 import { Device } from 'framework7'
+import { getMediaRecorderOptions } from './videohelpers'
 
 const styles = {
   video: {
@@ -23,25 +24,7 @@ const cameraOptions = {
   }
 }
 
-function getMediaRecorderOptions () {
-  let options = {mimeType: 'video/webm;codecs=vp9'}
-  if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-    console.error(`${options.mimeType} is not Supported`);
-    // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-    options = {mimeType: 'video/webm;codecs=vp8'};
-    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-      console.error(`${options.mimeType} is not Supported`);
-      // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-      options = {mimeType: 'video/webm'};
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        console.error(`${options.mimeType} is not Supported`);
-        // errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-        options = {mimeType: ''};
-      }
-    }
-  }
-  return options;
-}
+
 
 /* globals MediaRecorder */
 
@@ -53,7 +36,6 @@ export default class ReactionComponent extends React.Component {
     this.mediaSource.addEventListener('sourceopen', this.handleSourceOpen, false)
     this.mediaRecorder
     this.sourceBuffer
-    // ---
     this.stream
     // ---
     this.state = {
@@ -144,6 +126,9 @@ export default class ReactionComponent extends React.Component {
   }
   resetVideo() {
     this.stream = null;
+    this.recordedBlobs = []
+    this.sourceBuffer = null
+    // this.mediaRecorder = null
     const recordedNode = this.recordedRef.current
     recordedNode.srcObject = null
     recordedNode.src = null
@@ -218,8 +203,8 @@ export default class ReactionComponent extends React.Component {
 
     recordedNode.onloadedmetadata = function(e) {
       console.log("video loaded", e)
-      console.log('width is',  this.videoWidth);
-      console.log('height is', this.videoHeight);
+      // console.log('width is',  this.videoWidth);
+      // console.log('height is', this.videoHeight);
       recordedNode.controls = true
       recordedNode.play()
     }
