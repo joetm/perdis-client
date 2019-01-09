@@ -17,7 +17,7 @@ export default class VotingComponent extends React.Component {
     // ---
     this.state = {
       selected: false,
-      showSubmitButton: false
+      // showSubmitButton: false
     }
     // ---
     this.voteDown = this.voteDown.bind(this)
@@ -29,15 +29,17 @@ export default class VotingComponent extends React.Component {
     console.log('clicked down');
     this.setState({
       selected: 'down',
-      showSubmitButton: true
+      // showSubmitButton: true
     })
+    this.submit()
   }
   voteUp () {
     console.log('clicked up');
     this.setState({
       selected: 'up',
-      showSubmitButton: true
+      // showSubmitButton: true
     })
+    this.submit()
   }
   resetInput () {
     this.setState({selected: false})
@@ -56,7 +58,7 @@ export default class VotingComponent extends React.Component {
   }
   render () {
     const { feedback } = this.props
-    const { selected, showSubmitButton } = this.state
+    const { selected } = this.state
     return (
       <Block id="vote">
         <h2>{feedback.instructions}</h2>
@@ -87,18 +89,7 @@ export default class VotingComponent extends React.Component {
           </span>
         </Block>
 
-        <Block style={{display: showSubmitButton ? 'block' : 'none'}}>
-          <Row>
-            <Col width="33"></Col>
-            <Col width="33">
-              <Button fill
-                onClick={this.submit}
-              >Submit</Button>
-            </Col>
-            <Col width="33"></Col>
-          </Row>
-          <div>Clicking this button will submit your answer to the artist</div>
-        </Block>
+        <div>Clicking the thumbs will submit your answer to the artist</div>
 
       </Block>
     )
