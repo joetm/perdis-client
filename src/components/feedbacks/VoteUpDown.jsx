@@ -8,7 +8,7 @@ const styles = {
   },
 }
 
-const size = 250
+const size = '100%'
 
 
 export default class VotingComponent extends React.Component {
@@ -62,32 +62,32 @@ export default class VotingComponent extends React.Component {
     return (
       <Block id="vote">
         <h2>{feedback.instructions}</h2>
-        <Block>
-          <span
-            onClick={this.voteDown}
-          >
+        <Row>
+          <Col width="49" style="border:1px solid red">
+            <span onClick={this.voteDown}>
+              <Icon
+                id="down"
+                style={styles.voteItem}
+                fa="thumbs-down"
+                tooltip="Dislike"
+                size={size}
+                color={selected === 'down' ? "red" : "blue"}
+              />
+            </span>
+          </Col>
+          <Col width="49" style="border:1px solid red">
+            <span onClick={this.voteUp}>
             <Icon
-              id="down"
+              id="up"
               style={styles.voteItem}
-              fa="thumbs-down"
-              tooltip="Dislike"
+              fa="thumbs-up"
               size={size}
-              color={selected === 'down' ? "red" : "blue"}
+              tooltip="Like"
+              color={selected === 'up' ? "red" : "blue"}
             />
-          </span>
-          <span
-            onClick={this.voteUp}
-          >
-          <Icon
-            id="up"
-            style={styles.voteItem}
-            fa="thumbs-up"
-            size={size}
-            tooltip="Like"
-            color={selected === 'up' ? "red" : "blue"}
-          />
-          </span>
-        </Block>
+            </span>
+          </Col>
+        </Row>
 
         <div>Clicking the thumbs will submit your answer to the artist</div>
 
