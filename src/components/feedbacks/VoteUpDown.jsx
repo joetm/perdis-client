@@ -19,7 +19,6 @@ export default class VotingComponent extends React.Component {
     // ---
     this.state = {
       selected: false,
-      // showSubmitButton: false
     }
     // ---
     this.voteDown = this.voteDown.bind(this)
@@ -31,7 +30,6 @@ export default class VotingComponent extends React.Component {
     console.log('clicked down');
     this.setState({
       selected: 'down',
-      // showSubmitButton: true
     })
     this.submit()
   }
@@ -39,7 +37,6 @@ export default class VotingComponent extends React.Component {
     console.log('clicked up');
     this.setState({
       selected: 'up',
-      // showSubmitButton: true
     })
     this.submit()
   }

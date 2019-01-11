@@ -48,10 +48,11 @@ export default class LikertComponent extends React.Component {
 
         <BlockTitle>Choose one answer</BlockTitle>
         <List>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="Books" title="Books" name="choice"></ListItem>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="Movies" title="Movies" name="choice"></ListItem>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="Food"   title="Food"   name="choice"></ListItem>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="Drinks" title="Drinks" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="auction" title="Auction it" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="fair" title="Sell it at a fair or convention" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="gallery" title="Exhibit it at an art gallery" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="print" title="Print posters and postcards" name="choice"></ListItem>
+          <ListItem onChange={this.enableSubmitBtn} radio required value="keep" title="Keep it" name="choice"></ListItem>
         </List>
 
             <Row>
