@@ -6,16 +6,17 @@ import CaptureButton from '../CaptureButton'
 
 const styles = {
   video: {
+    width: 'auto',
     maxWidth: '100%',
-    width: '100%',
-    border: '1px solid #000000',
+    maxHeight: '250px',
+    border: '3px solid red',
     backgroundColor: '#303030',
   },
   img: {
-    maxHeight: '250px',
     width: 'auto',
     maxWidth: '100%',
-    border: '1px solid #000000',
+    maxHeight: '250px',
+    border: '3px solid #303030',
     backgroundColor: '#303030',
   },
   center: {

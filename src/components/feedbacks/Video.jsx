@@ -11,13 +11,6 @@ const cameraOptions = {
     facingMode: "user", // front camera
     width:  1280,
     height: 720,
-  },
-  videoContainer: {
-    maxHeight: '250px',
-    width: 'auto',
-    maxWidth: '100%',
-    border: isRecording ? '3px solid red' : '3px solid #303030',
-    backgroundColor: '#303030',
   }
 }
 
@@ -235,9 +228,13 @@ export default class VideoComponent extends React.Component {
         <p>Send a selfie video to the artist!</p>
 
         <Block style={{display: isRecording ? 'block' : 'none'}}>
-          <video id="video"
-            ref={this.videoRef}
-            style={styles.videoContainer}
+          <video id="video"    ref={this.videoRef}    style={{
+              maxHeight: '250px',
+              width: 'auto',
+              maxWidth: '100%',
+              border: isRecording ? '3px solid red' : '3px solid #303030',
+              backgroundColor: '#303030',
+            }}
             playsInline autoPlay muted
           ></video>
         </Block>
