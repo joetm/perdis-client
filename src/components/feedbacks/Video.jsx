@@ -4,13 +4,20 @@ import { Block, Row, Col, Button, Icon } from 'framework7-react'
 import { getMediaRecorderOptions } from './videohelpers'
 
 
-const hasEchoCancellation = true
+// const hasEchoCancellation = true
 const cameraOptions = {
   audio: false, // { echoCancellation: {exact: hasEchoCancellation} },
   video: {
     facingMode: "user", // front camera
     width:  1280,
     height: 720,
+  },
+  videoContainer: {
+    maxHeight: '250px',
+    width: 'auto',
+    maxWidth: '100%',
+    border: isRecording ? '3px solid red' : '3px solid #303030',
+    backgroundColor: '#303030',
   }
 }
 
@@ -228,13 +235,9 @@ export default class VideoComponent extends React.Component {
         <p>Send a selfie video to the artist!</p>
 
         <Block style={{display: isRecording ? 'block' : 'none'}}>
-          <video id="video"    ref={this.videoRef}    style={{
-              maxHeight: '250px',
-              width: 'auto',
-              maxWidth: '100%',
-              border: isRecording ? '3px solid red' : '3px solid #303030',
-              backgroundColor: '#303030',
-            }}
+          <video id="video"
+            ref={this.videoRef}
+            style={styles.videoContainer}
             playsInline autoPlay muted
           ></video>
         </Block>

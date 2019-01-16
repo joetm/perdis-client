@@ -8,16 +8,13 @@ const styles = {
   video: {
     maxWidth: '100%',
     width: '100%',
-    // width:  '100%    !important',
-    // height: 'auto   !important',
     border: '1px solid #000000',
     backgroundColor: '#303030',
   },
   img: {
+    maxHeight: '250px',
+    width: 'auto',
     maxWidth: '100%',
-    width: '100%',
-    // width:  '100%    !important',
-    // height: 'auto   !important',
     border: '1px solid #000000',
     backgroundColor: '#303030',
   },
