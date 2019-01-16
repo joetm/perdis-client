@@ -28,8 +28,8 @@ export default class InfoDialog extends React.Component {
             <Block>          
               <BlockTitle>View artworks and provide feedback!</BlockTitle>
               <Block>
-                  An art installation by researchers from the<br />
-                  Center for Ubiquitous Computing<br />
+                  An art installation by researchers from the
+                  Center for Ubiquitous Computing,
                   University of Oulu
               </Block>
               <BlockTitle>How it works</BlockTitle>

@@ -59,7 +59,7 @@ export default class AnswerComponent extends React.Component {
           <List noHairlines>
             <Input
               id="question"
-              type="textarea"
+              type={feedback.inputtype}
               clearButton
               placeholder="Enter your answer here"
               onChange={this.enableSubmitBtn}
