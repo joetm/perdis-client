@@ -254,15 +254,23 @@ export default class VideoComponent extends React.Component {
         <div id="errorMsg"></div>
 
         <Block>
-          <Button outline onClick={this.state.buttonAction}>
-            {this.state.buttonTxt}
-          </Button>
+          <Row>
+            <Col width="33"></Col>
+            <Col width="33">
+              <Button outline big
+                onClick={this.state.buttonAction}
+              >
+                {this.state.buttonTxt}
+              </Button>
+            </Col>
+            <Col width="33"></Col>
+          </Row>
         </Block>
 
         <Row>
           <Col width="33"></Col>
           <Col width="33">
-            <Button fill
+            <Button fill big
               onClick={this.submit}
               disabled={this.state.submitBtnDisabled}
             >

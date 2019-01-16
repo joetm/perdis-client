@@ -76,7 +76,7 @@ export default class LikertComponent extends React.Component {
         <Row>
           <Col width="33"></Col>
           <Col width="33">
-            <Button fill onClick={this.submit}>
+            <Button fill big onClick={this.submit}>
               Submit
             </Button>
           </Col>

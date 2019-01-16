@@ -217,7 +217,7 @@ export default class ImageComponent extends React.Component {
           <Col width="20"></Col>
           <Col width="60">
             <Button
-              fill
+              fill big
               disabled={submitBtnDisabled}
               onClick={this.submit}
             >

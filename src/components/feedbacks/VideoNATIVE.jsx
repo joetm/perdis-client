@@ -126,7 +126,7 @@ export default class VideoComponent extends React.Component {
           <Col width="10"></Col>
           <Col width="80">
 */}
-            <Button fill
+            <Button fill big
               onClick={this.submit}
               disabled={this.state.submitBtnDisabled}
             >

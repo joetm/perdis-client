@@ -6,11 +6,13 @@ export default class InfoDialog extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      contactaddress: 'TODO'
+      contactaddress: 'U2FsdGVkX1/JrJqNqbD5sIVnYfrksOefEbBPzqBmEv1lnCIGyRMM0EOgq+mSGJCC'
     }
   }
   componentDidMount() {
-    // TODO
+    const bytes  = CryptoJS.AES.decrypt(this.state.contactaddress, '8723ikhgjsKJDH*&#IU#JR#(UFDJSDG337hgea')
+    const contactaddress = bytes.toString(CryptoJS.enc.Utf8)
+    this.setState({contactaddress})
   }
   render () {
     const { contactaddress } = this.state
@@ -41,7 +43,7 @@ export default class InfoDialog extends React.Component {
               <BlockTitle>Privacy Policy</BlockTitle>
               <Block>
                   Your data will be shared with the artist who uploaded the artwork to this installation.
-                  {/*Besides us and the artist, nobody else will have access to your submitted data.*/}
+                  Besides the researchers and the artist, nobody else will have access to your submitted data.
                   <br />
                   For further question, contact {contactaddress}.
               </Block>

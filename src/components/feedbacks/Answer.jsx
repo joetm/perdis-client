@@ -71,7 +71,7 @@ export default class AnswerComponent extends React.Component {
               <Col width="33"></Col>
               <Col width="33">
                 <Button
-                  fill
+                  fill big
                   disabled={submitBtnDisabled}
                   onClick={this.submit}
                 >

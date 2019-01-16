@@ -158,28 +158,34 @@ export default class ImageComponent extends React.Component {
             <canvas id="canvas" ref={this.canvasRef} style={styles.img}></canvas>
         </div>
 
-        {
-          isRecording &&
-          <CaptureButton
-            buttonText="Take Picture"
-            icon="camera_round"
-            onCaptureClick={this.onCaptureClick}
-          />
-        }
-        {
-          selfieCaptured &&
-          <CaptureButton
-            buttonText="Reset Picture"
-            icon="delete_round"
-            onCaptureClick={this.onResetButtonClick}
-          />
-        }
+        <Row>
+          <Col width="20"></Col>
+          <Col width="60">
+            {
+              isRecording &&
+              <CaptureButton
+                buttonText="Take Picture"
+                icon="camera_round"
+                onCaptureClick={this.onCaptureClick}
+              />
+            }
+            {
+              selfieCaptured &&
+              <CaptureButton
+                buttonText="Reset Picture"
+                icon="delete_round"
+                onCaptureClick={this.onResetButtonClick}
+              />
+            }
+          </Col>
+          <Col width="20"></Col>
+        </Row>
 
         <Row>
           <Col width="20"></Col>
           <Col width="60">
             <Button
-              fill
+              fill big
               disabled={submitBtnDisabled}
               onClick={this.submit}
             >

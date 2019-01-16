@@ -79,7 +79,7 @@ export default class QuestionComponent extends React.Component {
           <Row>
             <Col width="33"></Col>
             <Col width="33">
-              <Button fill
+              <Button fill big
                 disabled={submitBtnDisabled}
                 onClick={this.submit}
               >

@@ -58,7 +58,7 @@ export default class LikertComponent extends React.Component {
             <Row>
               <Col width="33"></Col>
               <Col width="33">
-                <Button fill
+                <Button fill big
                   disabled={selectedOption ? false : true}
                   onClick={this.submit}
                 >

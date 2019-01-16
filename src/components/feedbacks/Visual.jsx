@@ -123,7 +123,7 @@ export default class VisualComponent extends React.Component {
         </Block>
 
         <Block style={{display: touchStack.length ? 'block' : 'none'}}>
-          <Button id="undoMsg">Undo</Button>
+          <Button id="undoMsg" big>Undo</Button>
         </Block>
 
         <Row>
@@ -133,6 +133,7 @@ export default class VisualComponent extends React.Component {
               fill
               disabled={touchStack.length == 0}
               onClick={this.submit}
+              big
             >
               Submit
             </Button>

@@ -258,7 +258,7 @@ export default class ReactionComponent extends React.Component {
           <Row>
             <Col width="20"></Col>
             <Col width="30">
-              <Button fill
+              <Button fill big
                 onClick={this.submit}
                 disabled={this.state.submitBtnDisabled}
               >
@@ -266,7 +266,7 @@ export default class ReactionComponent extends React.Component {
               </Button>
             </Col>
             <Col width="30">
-              <Button fill onClick={this.skip}>Skip</Button>
+              <Button fill big onClick={this.skip}>Skip</Button>
             </Col>
             <Col width="20"></Col>
           </Row>
