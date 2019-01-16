@@ -5,9 +5,10 @@ import { getMediaRecorderOptions } from './videohelpers'
 
 const styles = {
   video: {
+    width: 'auto',
     maxWidth: '100%',
-    border: '1px solid #000000',
-    marginLeft: '10px',
+    maxHeight: '250px',
+    border: '3px solid #303030',
     backgroundColor: '#303030',
   }
 }
@@ -269,7 +270,8 @@ export default class ReactionComponent extends React.Component {
             </Col>
             <Col width="20"></Col>
           </Row>
-          <div>Clicking the submit button will submit your video to the artist</div>
+          <div>Clicking the submit button will submit your video to the artist.</div>
+          <div>Clicking &quot;skip&quot; will delete the video.</div>
         </Block>
 
       </Block>
