@@ -13,7 +13,7 @@ const styles = {
   }
 }
 
-const TIMEOUT = 3000; // 10000;
+const TIMEOUT = 10000;
 
 const hasEchoCancellation = true
 const cameraOptions = {
