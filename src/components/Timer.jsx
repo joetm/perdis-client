@@ -60,7 +60,8 @@ export default class Timer extends React.Component {
 
     updateNavCenterMsg(INITIAL)
 
-    const self = this;
+    const self = this
+
     this.intervalTimer = setInterval(() => {
       if (t == 0) {
         self.RunActionAndReset()
@@ -72,6 +73,7 @@ export default class Timer extends React.Component {
       }
       t = t - 1;
     }, TIMEOUT)
+
   }
   render () {
     return null;

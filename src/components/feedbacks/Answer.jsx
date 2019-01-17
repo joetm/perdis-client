@@ -11,8 +11,8 @@ export default class AnswerComponent extends React.Component {
       answer: '',
     }
     // ---
-    this.resetInput = this.resetInput.bind(this)
     this.submit = this.submit.bind(this)
+    this.resetInput = this.resetInput.bind(this)
     this.enableSubmitBtn = this.enableSubmitBtn.bind(this)
   }
   submit() {
@@ -35,6 +35,7 @@ export default class AnswerComponent extends React.Component {
     })
   }
   enableSubmitBtn(e) {
+    console.log('e.target.value', e.target.value)
     if (!e.target.value) {
       this.setState({
         submitBtnDisabled: true,
@@ -50,37 +51,38 @@ export default class AnswerComponent extends React.Component {
   render () {
     const { answer, submitBtnDisabled } = this.state
     const { feedback } = this.props
+    console.log('feedback.inputtype', feedback.inputtype)
     return (
       <Block>
         <h2>{feedback.instructions}</h2>
         <p>
           {feedback.content}
         </p>
-          <List noHairlines>
-            <Input
-              id="question"
-              type={feedback.inputtype}
-              clearButton
-              placeholder="Enter your answer here"
-              onChange={this.enableSubmitBtn}
-              onInputClear={this.resetInput}
-              value={answer}
-            />
-          </List>
-            <Row>
-              <Col width="33"></Col>
-              <Col width="33">
-                <Button
-                  fill big
-                  disabled={submitBtnDisabled}
-                  onClick={this.submit}
-                >
-                  Submit
-                </Button>
-              </Col>
-              <Col width="33"></Col>
-            </Row>
-            <div>Clicking this button will submit your answer to the artist</div>
+        <List noHairlines>
+          <Input
+            id="question"
+            type={feedback.inputtype}
+            clearButton
+            placeholder="Enter your answer here"
+            onChange={this.enableSubmitBtn}
+            onInputClear={this.resetInput}
+            value={answer}
+          />
+        </List>
+        <Row>
+          <Col width="33"></Col>
+          <Col width="33">
+            <Button
+              fill big
+              disabled={submitBtnDisabled}
+              onClick={this.submit}
+            >
+              Submit
+            </Button>
+          </Col>
+          <Col width="33"></Col>
+        </Row>
+        <div>Clicking this button will submit your answer to the artist</div>
       </Block>
     )
   }

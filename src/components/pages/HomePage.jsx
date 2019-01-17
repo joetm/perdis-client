@@ -11,6 +11,7 @@ import { Device } from 'framework7'
 import Image          from '../feedbacks/Image'
 import ImageTimer     from '../feedbacks/ImageTimer'
 import Video          from '../feedbacks/Video'
+import Dummy          from '../feedbacks/Dummy'
 import Reaction       from '../feedbacks/Reaction'
 // // import Visual         from '../components/feedbacks/Visual'
 import Question       from '../feedbacks/Question'
@@ -19,6 +20,7 @@ import Likert         from '../feedbacks/Likert'
 import VoteUpDown     from '../feedbacks/VoteUpDown'
 import MultipleChoice from '../feedbacks/MultipleChoice'
 
+const RECONNECT_TIMEOUT = 1000;
 
 const styles = {
   imgstyle: {
@@ -59,13 +61,15 @@ export default class RatingPage extends React.Component {
       connectionError: false,
       error: null,
       navCenterMsg: '',
+      infoOnlyFeedback: false,
     }
     // ---
     this.refresh = this.refresh.bind(this)
     this.renderFeedback = this.renderFeedback.bind(this)
+    this.connectWebSocket = this.connectWebSocket.bind(this)
     this.updateNavCenterMsg = this.updateNavCenterMsg.bind(this)
   }
-  componentWillMount () {
+  connectWebSocket() {
     const { SERVER, PORT } = this.$f7.data
     // this.setState({connectionError: true})
     this.mySocket = new WebSocket("ws://" + SERVER + ":" + PORT + "/")
@@ -77,24 +81,23 @@ export default class RatingPage extends React.Component {
       this.send("sync")
     }
     this.mySocket.onmessage = function (event) {
-      // iterated through all the feedback options?
-      if (event.data === 'end') {
-
-      } else {
-        // show new feedback and artwork
-        const obj = JSON.parse(event.data)
-        console.log('WS: received: ', obj)
-        this.setState({
-          artwork: obj.artwork,
-          feedback: obj.feedback,
-        })
-      }
+      // show new feedback and artwork
+      const obj = JSON.parse(event.data)
+      console.log('WS: received: ', obj)
+      this.setState({
+        artwork: obj.artwork,
+        feedback: obj.feedback,
+        infoOnlyFeedback: obj.feedback.type === "dummy" ? true : false,
+      })
     }.bind(this)
     this.mySocket.onerror = function (event) {
       console.error("WS: WebSocket connection error:", event);
       this.setState({connectionError: true})
 
-      // TODO: try to reconnect
+      // try to reconnect after RECONNECT_TIMEOUT ms
+      setTimeout(() => {
+        this.connectWebSocket()
+      }, RECONNECT_TIMEOUT)
 
     }.bind(this)
     // TODO
@@ -106,6 +109,9 @@ export default class RatingPage extends React.Component {
       //   error: event,
       // })
     // }.bind(this)
+  }
+  componentWillMount () {
+    this.connectWebSocket()
   }
   componentWillUnmount () {
     if (this.mySocket) {
@@ -122,6 +128,7 @@ export default class RatingPage extends React.Component {
     return false
   }
   renderFeedback () {
+    // info: don't change state here - this is used to render feedback
     const { feedback, artwork } = this.state
     if (!feedback || !feedback.type || !artwork) {
       return null
@@ -129,6 +136,9 @@ export default class RatingPage extends React.Component {
     const artworkID = artwork.id
     console.log('render feedback:', feedback.type);
     switch (feedback.type) {
+      case 'dummy':
+        return <Dummy artworkID={artworkID} feedback={feedback} send={this.refresh} />
+        break
       case 'imagetimer':
         return <ImageTimer artworkID={artworkID} feedback={feedback} send={this.refresh} updateNavCenterMsg={this.updateNavCenterMsg} />
         break
@@ -167,10 +177,10 @@ export default class RatingPage extends React.Component {
     this.setState({navCenterMsg: msg})
   }
   render () {
-    const { artwork, feedback, connectionError, navCenterMsg } = this.state
+    const { artwork, feedback, connectionError, navCenterMsg, infoOnlyFeedback } = this.state
     const { SERVER, PORT } = this.$f7.data
     return (
-      <Page>
+      <Page style={{backgroundColor: !infoOnlyFeedback ? 'inherit' : '#ffeb3b' }}>
 
         <Navbar
           sliding
@@ -183,30 +193,38 @@ export default class RatingPage extends React.Component {
             navCenterMsg &&
               <div style={styles.navCenterMsg}>{navCenterMsg}</div>
           }
-          <NavRight>
-            {
-              artwork && artwork.src ?
-                <img alt="Image" src={artwork.src} style={styles.imgstyle} />
-                :
-                <Preloader style={styles.navLoader} size={42}></Preloader>
-            }
-          </NavRight>
+          {
+            !infoOnlyFeedback &&
+              <NavRight>
+                {
+                  artwork && artwork.src ?
+                    <img alt="Image" src={artwork.src} style={styles.imgstyle} />
+                    :
+                    <Preloader style={styles.navLoader} size={42}></Preloader>
+                }
+              </NavRight>
+          }
         </Navbar>
 
         {
-          artwork ?
-            <Block style={{textAlign: 'center'}}>
-              <h1>
-                    &quot;{artwork.title}&quot; <span style={{fontWeight: 'normal'}}>by</span> {artwork.artist}
-              </h1>
-            </Block>
-            :
-            <Block style={{textAlign: 'center'}}>
-              <h2>
-                    Connecting to WebSocket Server
-              </h2>
-              <Preloader style={styles.navLoader} size={42}></Preloader>
-            </Block>
+          !infoOnlyFeedback &&
+            <div>
+            {
+              artwork && !infoOnlyFeedback ?
+                <Block style={{textAlign: 'center'}}>
+                  <h1>
+                        &quot;{artwork.title}&quot; <span style={{fontWeight: 'normal'}}>by</span> {artwork.artist}
+                  </h1>
+                </Block>
+                :
+                <Block style={{textAlign: 'center'}}>
+                  <h2>
+                        Connecting to WebSocket Server
+                  </h2>
+                  <Preloader style={styles.navLoader} size={42}></Preloader>
+                </Block>
+            }
+            </div>
         }
 
         <Block style={styles.feedback}>

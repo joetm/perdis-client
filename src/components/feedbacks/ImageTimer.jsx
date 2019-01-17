@@ -106,25 +106,26 @@ export default class ImageTimerComponent extends React.Component {
     this.activateWebStream()
   }
   capture() {
-      const videoNode = this.videoRef.current
-      const canvasNode = this.canvasRef.current
-      canvasNode.width = videoNode.videoWidth
-      canvasNode.height = videoNode.videoHeight
-      canvasNode.getContext('2d').drawImage(videoNode, 0, 0, canvasNode.width, canvasNode.height)
-      const image = canvasNode.toDataURL("image/jpeg")
-      // console.log('selfie', image);
+    const videoNode = this.videoRef.current
+    const canvasNode = this.canvasRef.current
+    canvasNode.width = videoNode.videoWidth
+    canvasNode.height = videoNode.videoHeight
+    canvasNode.getContext('2d').drawImage(videoNode, 0, 0, canvasNode.width, canvasNode.height)
+    const image = canvasNode.toDataURL("image/jpeg")
+    // console.log('selfie', image);
 
-      // store the image and
-      // enable the submit button
-      this.setState({
-        image,
-        submitBtnDisabled: false,
-        isRecording: false,
-        selfieCaptured: true,
-        timerRunning: false,
-      })
-      // stop streaming
-      this.resetVideo()
+    // stop streaming
+    this.resetVideo()
+
+    // store the image and
+    // enable the submit button
+    this.setState({
+      image,
+      submitBtnDisabled: false,
+      isRecording: false,
+      selfieCaptured: true,
+      timerRunning: false,
+    })
   }
   onResetButtonClick() {
     this.resetCapture()
