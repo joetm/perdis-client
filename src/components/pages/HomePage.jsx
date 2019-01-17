@@ -6,14 +6,14 @@ import {
   List, ListItem, Row, Col, Button,
   ListInput, Input, Label
 } from 'framework7-react'
-import { Device } from 'framework7'
+// import { Device } from 'framework7'
 
 import Image          from '../feedbacks/Image'
 import ImageTimer     from '../feedbacks/ImageTimer'
 import Video          from '../feedbacks/Video'
 import Dummy          from '../feedbacks/Dummy'
 import Reaction       from '../feedbacks/Reaction'
-// // import Visual         from '../components/feedbacks/Visual'
+import Visual         from '../feedbacks/Visual'
 import Question       from '../feedbacks/Question'
 import Answer         from '../feedbacks/Answer'
 import Likert         from '../feedbacks/Likert'
@@ -62,12 +62,14 @@ export default class RatingPage extends React.Component {
       error: null,
       navCenterMsg: '',
       infoOnlyFeedback: false,
+      artworkAspectRatio: 1,
     }
     // ---
     this.refresh = this.refresh.bind(this)
     this.renderFeedback = this.renderFeedback.bind(this)
     this.connectWebSocket = this.connectWebSocket.bind(this)
     this.updateNavCenterMsg = this.updateNavCenterMsg.bind(this)
+    this.getImageAspectRatio = this.getImageAspectRatio.bind(this)
   }
   connectWebSocket() {
     const { SERVER, PORT } = this.$f7.data
@@ -129,7 +131,7 @@ export default class RatingPage extends React.Component {
   }
   renderFeedback () {
     // info: don't change state here - this is used to render feedback
-    const { feedback, artwork } = this.state
+    const { feedback, artwork, artworkAspectRatio } = this.state
     if (!feedback || !feedback.type || !artwork) {
       return null
     }
@@ -151,9 +153,9 @@ export default class RatingPage extends React.Component {
       case 'reaction':
         return <Reaction artworkID={artworkID} feedback={feedback} send={this.refresh} />
         break
-      // case 'visual':
-      //   return <Visual artworkID={artworkID} artwork={artwork} feedback={feedback} send={this.refresh} />
-      //   break
+      case 'visual':
+        return <Visual artworkID={artworkID} aspectRatio={artworkAspectRatio} artwork={artwork} feedback={feedback} send={this.refresh} />
+        break
       case 'question':
         return <Question artworkID={artworkID} feedback={feedback} send={this.refresh} />
         break
@@ -175,6 +177,11 @@ export default class RatingPage extends React.Component {
   }
   updateNavCenterMsg(msg) {
     this.setState({navCenterMsg: msg})
+  }
+  getImageAspectRatio({target: img}) {
+    this.setState({
+      artworkAspectRatio: img.offsetWidth / img.offsetHeight,
+    })
   }
   render () {
     const { artwork, feedback, connectionError, navCenterMsg, infoOnlyFeedback } = this.state
@@ -198,7 +205,7 @@ export default class RatingPage extends React.Component {
               <NavRight>
                 {
                   artwork && artwork.src ?
-                    <img alt="Image" src={artwork.src} style={styles.imgstyle} />
+                    <img alt="Image" onLoad={this.getImageAspectRatio} src={artwork.src} style={styles.imgstyle} />
                     :
                     <Preloader style={styles.navLoader} size={42}></Preloader>
                 }
