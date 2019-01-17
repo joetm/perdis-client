@@ -1,7 +1,7 @@
 import React from 'react'
 import { Block, Row, Col, Button, Icon } from 'framework7-react'
-// import { Device } from 'framework7'
 import CaptureButton from '../CaptureButton'
+import Timer from '../Timer'
 
 
 const styles = {
@@ -25,7 +25,7 @@ const styles = {
 }
 
 
-export default class ImageComponent extends React.Component {
+export default class ImageTimerComponent extends React.Component {
   constructor(props) {
     super(props)
     // ---
@@ -34,18 +34,20 @@ export default class ImageComponent extends React.Component {
       errorMsg: null,
       image: null,
       artworkID: false,
-      isRecording: true,
+      isRecording: false,
       selfieCaptured: false,
+      timerRunning: false,
     }
     // ---
     this.videoRef  = React.createRef()
     this.canvasRef = React.createRef()
     // ---
     this.submit = this.submit.bind(this)
-    this.onCaptureClick = this.onCaptureClick.bind(this)
+    this.capture = this.capture.bind(this)
+    this.startTimer = this.startTimer.bind(this)
     this.onResetButtonClick = this.onResetButtonClick.bind(this)
     this.resetCapture = this.resetCapture.bind(this)
-    // for web
+    this.resetVideo = this.resetVideo.bind(this)
     this.activateWebStream = this.activateWebStream.bind(this)
       this.handleStreamSuccess = this.handleStreamSuccess.bind(this)
       this.handleStreamError = this.handleStreamError.bind(this)
@@ -77,12 +79,18 @@ export default class ImageComponent extends React.Component {
     )
   }
     handleStreamSuccess(stream) {
+
+      this.stream = stream
+
+      this.setState({timerRunning: true})
+
       const videoNode = this.videoRef.current
       try {
-        videoNode.srcObject = stream
+        videoNode.srcObject = this.stream
       } catch (error) {
-        videoNode.src = window.URL.createObjectURL(stream)
+        videoNode.src = window.URL.createObjectURL(this.stream)
       }
+
     }
     handleStreamError(error) {
       console.error('navigator.getUserMedia error [%s]: ', error.code, error.name, error.message)
@@ -90,43 +98,73 @@ export default class ImageComponent extends React.Component {
       if (error.name == 'NotSupportedError') {
         name = 'Browser Not Supported'
       }
-      this.setState({errorMsg: name + ': ' + error.message})
+      this.setState({
+        errorMsg: name + ': ' + error.message,
+      })
     }
-  onCaptureClick() {
-    // on desktop, use webrtc
-    const videoNode = this.videoRef.current
-    const canvasNode = this.canvasRef.current
-    canvasNode.width = videoNode.videoWidth
-    canvasNode.height = videoNode.videoHeight
-    canvasNode.getContext('2d').drawImage(videoNode, 0, 0, canvasNode.width, canvasNode.height)
+  startTimer() {
+    this.activateWebStream()
+  }
+  capture() {
+      const videoNode = this.videoRef.current
+      const canvasNode = this.canvasRef.current
+      canvasNode.width = videoNode.videoWidth
+      canvasNode.height = videoNode.videoHeight
+      canvasNode.getContext('2d').drawImage(videoNode, 0, 0, canvasNode.width, canvasNode.height)
+      const image = canvasNode.toDataURL("image/jpeg")
+      // console.log('selfie', image);
 
-    const image = canvasNode.toDataURL("image/jpeg")
-    // console.log('selfie', image);
-
-    // store the image and
-    // enable the submit button
-    this.setState({
-      image,
-      submitBtnDisabled: false,
-      isRecording: false,
-      selfieCaptured: true,
-    })
+      // store the image and
+      // enable the submit button
+      this.setState({
+        image,
+        submitBtnDisabled: false,
+        isRecording: false,
+        selfieCaptured: true,
+        timerRunning: false,
+      })
+      // stop streaming
+      this.resetVideo()
   }
   onResetButtonClick() {
     this.resetCapture()
-    this.activateWebStream()
-    this.setState({isRecording: true})
   }
   resetCapture() {
+    // stop the stream
+    this.resetVideo()
+    // clear image in canvas
     const canvasNode = this.canvasRef.current
     const context = canvasNode.getContext('2d')
     context.clearRect(0, 0, canvasNode.width, canvasNode.height)
+    // reset state
     this.setState({
       image: null,
       submitBtnDisabled: true,
-      isRecording: true,
+      isRecording: false,
       selfieCaptured: false,
+      timerRunning: false,
     })
+  }
+  resetVideo () {
+    console.log("Reset video")
+    if (this.stream) {
+      // stop all tracks in stream
+      const tracks = this.stream.getTracks()
+      for (let i = 0; i < tracks.length; i++) {
+        tracks[i].stop()
+        console.log("Stopped track", i)
+      }
+    }
+    this.stream = null
+    // kill the stuff in the video frame
+    const videoNode = this.videoRef.current
+    // videoNode.stop()
+    // videoNode.src = null
+    // videoNode.srcObject = null
+    videoNode.removeAttribute('src')
+    videoNode.removeAttribute('srcObject')
+    // videoNode.controls = false
+    // videoNode.load()
   }
   componentWillReceiveProps(nextProps) {
     // (re-)activate the recording when artwork changes
@@ -137,12 +175,9 @@ export default class ImageComponent extends React.Component {
       this.activateWebStream()
     }
   }
-  componentDidMount() {
-    // on Desktop, start streaming video
-    this.activateWebStream()
-  }
   render() {
-    const { submitBtnDisabled, errorMsg, image, isRecording, selfieCaptured } = this.state
+    const { submitBtnDisabled, errorMsg, image, isRecording, selfieCaptured, timerRunning } = this.state
+    const { updateNavCenterMsg } = this.props
     return (
       <Block id="webcam-video">
 
@@ -150,22 +185,31 @@ export default class ImageComponent extends React.Component {
 
         <div style={{display: errorMsg ? 'block' : 'none'}} id="errorMsg">{errorMsg}</div>
 
-        <div style={{display: isRecording ? 'block' : 'none'}}>
+        <div style={{display: timerRunning ? 'block' : 'none'}}>
             <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={'autoplay'} playsInline={true}></video>
         </div>
         <div style={{display: selfieCaptured ? 'block' : 'none'}}>
             <canvas id="canvas" ref={this.canvasRef} style={styles.img}></canvas>
         </div>
 
+        {
+          timerRunning &&
+            <Timer
+              action={this.capture}
+              isRunning={timerRunning}
+              updateNavCenterMsg={updateNavCenterMsg}
+            />
+        }
+
         <Row>
           <Col width="20"></Col>
           <Col width="60">
             {
-              isRecording &&
+              !timerRunning && !image &&
               <CaptureButton
                 buttonText="Take Picture"
                 icon="camera_round"
-                onCaptureClick={this.onCaptureClick}
+                onCaptureClick={this.startTimer}
               />
             }
             {

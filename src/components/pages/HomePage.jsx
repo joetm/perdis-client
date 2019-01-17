@@ -9,6 +9,7 @@ import {
 import { Device } from 'framework7'
 
 import Image          from '../feedbacks/Image'
+import ImageTimer     from '../feedbacks/ImageTimer'
 import Video          from '../feedbacks/Video'
 import Reaction       from '../feedbacks/Reaction'
 // // import Visual         from '../components/feedbacks/Visual'
@@ -36,6 +37,11 @@ const styles = {
     textAlign: 'center',
     align: 'center',
   },
+  navCenterMsg: {
+    textAlign: 'center',
+    align: 'center',
+    margin: 'auto',
+  },
 }
 
 
@@ -52,10 +58,12 @@ export default class RatingPage extends React.Component {
       feedback: null,
       connectionError: false,
       error: null,
+      navCenterMsg: '',
     }
     // ---
     this.refresh = this.refresh.bind(this)
     this.renderFeedback = this.renderFeedback.bind(this)
+    this.updateNavCenterMsg = this.updateNavCenterMsg.bind(this)
   }
   componentWillMount () {
     const { SERVER, PORT } = this.$f7.data
@@ -85,6 +93,9 @@ export default class RatingPage extends React.Component {
     this.mySocket.onerror = function (event) {
       console.error("WS: WebSocket connection error:", event);
       this.setState({connectionError: true})
+
+      // TODO: try to reconnect
+
     }.bind(this)
     // TODO
     // this.mySocket.onclose = function (event) {
@@ -118,6 +129,9 @@ export default class RatingPage extends React.Component {
     const artworkID = artwork.id
     console.log('render feedback:', feedback.type);
     switch (feedback.type) {
+      case 'imagetimer':
+        return <ImageTimer artworkID={artworkID} feedback={feedback} send={this.refresh} updateNavCenterMsg={this.updateNavCenterMsg} />
+        break
       case 'image':
         return <Image artworkID={artworkID} feedback={feedback} send={this.refresh} />
         break
@@ -149,17 +163,26 @@ export default class RatingPage extends React.Component {
     console.error('unknown feedback.type', feedback.type)
     return null
   }
+  updateNavCenterMsg(msg) {
+    this.setState({navCenterMsg: msg})
+  }
   render () {
-    const { artwork, feedback, connectionError } = this.state
+    const { artwork, feedback, connectionError, navCenterMsg } = this.state
     const { SERVER, PORT } = this.$f7.data
     return (
       <Page>
 
-        <Navbar>
+        <Navbar
+          sliding
+        >
           <NavLeft>
             <Link popupOpen="#popup"><Icon f7="help_round" /></Link>
           </NavLeft>
-          <NavTitle>Provide your feedback!</NavTitle>
+          <NavTitle title="Provide your feedback!" />
+          {
+            navCenterMsg &&
+              <div style={styles.navCenterMsg}>{navCenterMsg}</div>
+          }
           <NavRight>
             {
               artwork && artwork.src ?
