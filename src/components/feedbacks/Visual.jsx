@@ -167,7 +167,7 @@ export default class VisualComponent extends React.Component {
     const { artwork } = this.props
     const imageObj = new Image()
     imageObj.onload = function() {
-      this.ctx.drawImage(imageObj, 0, 0, canvasBaseLength * aspectRatio, canvasBaseLength / aspectRatio)
+      this.ctx.drawImage(imageObj, 0, 0, this.canvas.width, this.canvas.height)
     }.bind(this)
     imageObj.src = artwork.src
   }
@@ -195,6 +195,7 @@ export default class VisualComponent extends React.Component {
     this.init()
   }
   componentWillUnmount() {
+      // reset canvas
       this.ctx = null
       this.canvas = null
       this.mouseX = null
@@ -217,7 +218,7 @@ export default class VisualComponent extends React.Component {
             <img src={artwork.src} id="canvas" ref={this.canvasRef} style={styles.canvas} />
             */}
               <canvas
-                width={canvasBaseLength * aspectRatio}
+                width={canvasBaseLength}
                 height={canvasBaseLength / aspectRatio}
                 style={styles.sketchpad}
                 ref={this.canvasRef}
@@ -247,12 +248,10 @@ export default class VisualComponent extends React.Component {
             >
               Submit
             </Button>
-            <div>
-              Clicking this button will submit your feedback to the artist
-            </div>
           </Col>
           <Col width="33"></Col>
         </Row>
+        <div>Clicking this button will submit your feedback to the artist</div>
 
       </Block>
     ) 
