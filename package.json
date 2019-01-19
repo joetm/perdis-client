@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@fortawesome/fontawesome-pro": "^5.6.3",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
