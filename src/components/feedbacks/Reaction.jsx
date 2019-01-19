@@ -47,9 +47,6 @@ export default class ReactionComponent extends React.Component {
     // ---
     this.recordedRef = React.createRef()
     // ---
-    this.submit = this.submit.bind(this)
-    this.skip = this.skip.bind(this)
-    // ---
     this.activateStream = this.activateStream.bind(this)
       this.handleStreamSuccess = this.handleStreamSuccess.bind(this)
       this.handleStreamError = this.handleStreamError.bind(this)
@@ -70,7 +67,7 @@ export default class ReactionComponent extends React.Component {
       this.activateStream()
     }
   }
-  submit() {
+  submit = () => {
     const { send, artworkID } = this.props
     const feedback = {
       type: 'reaction',
@@ -91,7 +88,7 @@ export default class ReactionComponent extends React.Component {
       this.setState({artworkID: false})
     }
   }
-  skip() {
+  skip = () => {
     const { send, artworkID } = this.props
     const feedback = {
       type: 'reaction',

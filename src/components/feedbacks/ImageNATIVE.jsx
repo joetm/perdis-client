@@ -4,8 +4,6 @@ import { Device } from 'framework7'
 import CaptureButton from '../CaptureButton'
 
 
-
-
 const styles = {
   video: {
     width:'480px',

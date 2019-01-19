@@ -16,34 +16,28 @@ const size = '200'
 export default class VotingComponent extends React.Component {
   constructor(props) {
     super(props)
-    // ---
     this.state = {
       selected: false,
     }
-    // ---
-    this.voteDown = this.voteDown.bind(this)
-    this.voteUp = this.voteUp.bind(this)
-    this.resetInput = this.resetInput.bind(this)
-    this.submit = this.submit.bind(this)
   }
-  voteDown () {
+  voteDown = () => {
     console.log('clicked down');
     this.setState({
       selected: 'down',
     })
     this.submit()
   }
-  voteUp () {
+  voteUp = () => {
     console.log('clicked up');
     this.setState({
       selected: 'up',
     })
     this.submit()
   }
-  resetInput () {
+  resetInput = () => {
     this.setState({selected: false})
   }
-  submit () {
+  submit = () => {
     const { send, artworkID } = this.props // 'send' function from props
     const feedback = {
       type: 'vote',

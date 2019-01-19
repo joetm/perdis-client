@@ -1,5 +1,5 @@
-import React from 'react';
-import { Page, Navbar, Link, Block, BlockTitle } from 'framework7-react';
+import React from 'react'
+import { Page, Navbar, Link, Block, BlockTitle } from 'framework7-react'
 
 export default () => (
   <Page>
@@ -12,4 +12,4 @@ export default () => (
       <p>Fusce eros lectus, accumsan eget mi vel, iaculis tincidunt felis. Nulla tincidunt pharetra sagittis. Fusce in felis eros. Nulla sit amet aliquam lorem, et gravida ipsum. Mauris consectetur nisl non sollicitudin tristique. Praesent vitae metus ac quam rhoncus mattis vel et nisi. Aenean aliquet, felis quis dignissim iaculis, lectus quam tincidunt ligula, et venenatis turpis risus sed lorem. Morbi eu metus elit. Ut vel diam dolor.</p>
     </Block>
   </Page>
-);
+)

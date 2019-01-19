@@ -36,15 +36,12 @@ export default class Timer extends React.Component {
     // this.state = {
     //   txt: INITIAL,
     // }
-    // ---
     this.intervalTimer = null
-    // ---
-    this.RunActionAndReset = this.RunActionAndReset.bind(this)
   }
   reset() {
     this.setState({txt: INITIAL})
   }
-  RunActionAndReset() {
+  RunActionAndReset = () => {
     const { action, updateNavCenterMsg } = this.props
     clearInterval(this.intervalTimer)
     updateNavCenterMsg('')

@@ -10,12 +10,8 @@ export default class QuestionComponent extends React.Component {
       submitBtnDisabled: true,
       question: '',
     }
-    // ---
-    this.resetInput = this.resetInput.bind(this)
-    this.submit = this.submit.bind(this)
-    this.enableSubmitBtn = this.enableSubmitBtn.bind(this)
   }
-  submit () {
+  submit = () => {
     const { send, artworkID } = this.props // 'send' function from props
     const { question } = this.state
     const feedback = {
@@ -28,13 +24,13 @@ export default class QuestionComponent extends React.Component {
       this.resetInput()
     }
   }
-  resetInput () {
+  resetInput = () => {
     this.setState({
       question: '',
       submitBtnDisabled: true,
     })
   }
-  enableSubmitBtn (e) {
+  enableSubmitBtn = (e) => {
     const question = e.target.value
     if (!question) {
       this.setState({

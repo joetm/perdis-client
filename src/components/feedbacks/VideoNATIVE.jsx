@@ -28,13 +28,12 @@ export default class VideoComponent extends React.Component {
     // ---
     // this.videoRef    = React.createRef()
     // ---
-    this.submit = this.submit.bind(this)
     this.resetVideo = this.resetVideo.bind(this)
     this.startRecording = this.startRecording.bind(this)
     this.captureSuccess = this.captureSuccess.bind(this)
     this.captureError = this.captureError.bind(this)
   }
-  submit() {
+  submit = () => {
     const { send, artworkID } = this.props
     const { video } = this.state
     const feedback = {

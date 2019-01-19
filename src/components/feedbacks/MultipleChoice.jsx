@@ -5,17 +5,11 @@ import { Block, BlockTitle, List, ListItem, Row, Col, Button } from 'framework7-
 export default class LikertComponent extends React.Component {
   constructor(props) {
     super(props)
-    // ---
     this.state = {
       selectedOption: null,
     }
-    // ---
-    this.resetInput = this.resetInput.bind(this)
-    this.submit = this.submit.bind(this)
-    this.enableSubmitBtn = this.enableSubmitBtn.bind(this)
-    this.setValue = this.setValue.bind(this)
   }
-  submit () {
+  submit = () => {
     const { send, artworkID } = this.props // 'send' function from props
     const { selectedOption } = this.state
     const feedback = {
@@ -28,14 +22,10 @@ export default class LikertComponent extends React.Component {
       this.resetInput()
     }
   }
-  enableSubmitBtn(e) {
+  enableSubmitBtn = (e) => {
     this.setState({selectedOption: e.target.value})
   }
-  setValue(e) {
-    // console.log(e.target);
-    // this.setState({selectedOption: e.target.value})
-  }
-  resetInput () {
+  resetInput = () => {
     this.setState({selectedOption: null})
   }
   render () {

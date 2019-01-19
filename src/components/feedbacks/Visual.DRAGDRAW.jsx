@@ -31,10 +31,9 @@ export default class VisualComponent extends React.Component {
     this.lastPoint = null
     this.ctx = null
     // ---
-    this.submit = this.submit.bind(this)
     this.resetCanvas = this.resetCanvas.bind(this)
   }
-  submit() {
+  submit = () => {
     const { send, artworkID } = this.props
     const { touchStack } = this.state
     const feedback = {

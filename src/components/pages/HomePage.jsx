@@ -37,8 +37,6 @@ const styles = {
 }
 
 
-
-
 export default class RatingPage extends React.Component {
   constructor(props) {
     super(props)
@@ -54,13 +52,8 @@ export default class RatingPage extends React.Component {
       infoOnlyFeedback: false,
       aspectRatio: 1,
     }
-    // ---
-    this.refresh = this.refresh.bind(this)
-    this.connectWebSocket = this.connectWebSocket.bind(this)
-    this.updateNavCenterMsg = this.updateNavCenterMsg.bind(this)
-    this.getImageAspectRatio = this.getImageAspectRatio.bind(this)
   }
-  connectWebSocket() {
+  connectWebSocket = () => {
     const { SERVER, PORT } = this.$f7.data
     // this.setState({connectionError: true})
     this.mySocket = new WebSocket("ws://" + SERVER + ":" + PORT + "/")
@@ -109,7 +102,7 @@ export default class RatingPage extends React.Component {
       this.mySocket.close()
     }
   }
-  refresh (feedback) {
+  refresh = (feedback) => {
     if (this.mySocket) {
       console.log('Sending feedback:', feedback)
       this.mySocket.send(JSON.stringify(feedback))
@@ -122,10 +115,10 @@ export default class RatingPage extends React.Component {
     console.error('Can\'t send feedback - no WebSocket connection')
     return false
   }
-  updateNavCenterMsg(msg) {
+  updateNavCenterMsg = (msg) => {
     this.setState({navCenterMsg: msg})
   }
-  getImageAspectRatio({target: img}) {
+  getImageAspectRatio = ({target: img}) => {
     this.setState({
       aspectRatio: img.offsetWidth / img.offsetHeight,
     })

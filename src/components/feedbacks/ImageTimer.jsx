@@ -42,17 +42,11 @@ export default class ImageTimerComponent extends React.Component {
     this.videoRef  = React.createRef()
     this.canvasRef = React.createRef()
     // ---
-    this.submit = this.submit.bind(this)
-    this.capture = this.capture.bind(this)
-    this.startTimer = this.startTimer.bind(this)
-    this.onResetButtonClick = this.onResetButtonClick.bind(this)
-    this.resetCapture = this.resetCapture.bind(this)
-    this.resetVideo = this.resetVideo.bind(this)
     this.activateWebStream = this.activateWebStream.bind(this)
       this.handleStreamSuccess = this.handleStreamSuccess.bind(this)
       this.handleStreamError = this.handleStreamError.bind(this)
   }
-  submit() {
+  submit = () => {
     console.log("submitting feedback")
     const { send, artworkID } = this.props
     const { image } = this.state
@@ -102,10 +96,10 @@ export default class ImageTimerComponent extends React.Component {
         errorMsg: name + ': ' + error.message,
       })
     }
-  startTimer() {
+  startTimer = () => {
     this.activateWebStream()
   }
-  capture() {
+  capture = () => {
     const videoNode = this.videoRef.current
     const canvasNode = this.canvasRef.current
     canvasNode.width = videoNode.videoWidth
@@ -127,10 +121,10 @@ export default class ImageTimerComponent extends React.Component {
       timerRunning: false,
     })
   }
-  onResetButtonClick() {
+  onResetButtonClick = () => {
     this.resetCapture()
   }
-  resetCapture() {
+  resetCapture = () => {
     // stop the stream
     this.resetVideo()
     // clear image in canvas
@@ -146,7 +140,7 @@ export default class ImageTimerComponent extends React.Component {
       timerRunning: false,
     })
   }
-  resetVideo () {
+  resetVideo = () => {
     console.log("Reset video")
     if (this.stream) {
       // stop all tracks in stream

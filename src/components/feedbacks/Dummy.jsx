@@ -2,12 +2,8 @@ import React from 'react'
 import { Block, Row, Col, Button } from 'framework7-react'
 
 
-export default class DummyComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.submit = this.submit.bind(this)
-  }
-  submit() {
+export default class DummyComponent extends React.PureComponent {
+  submit = () => {
     const { send } = this.props // 'send' function from props
     const feedback = {
       type: 'dummy',

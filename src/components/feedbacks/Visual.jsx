@@ -58,7 +58,6 @@ export default class VisualComponent extends React.Component {
     this.touchX
     this.touchY
     // ---
-    this.submit = this.submit.bind(this)
     this.clearCanvas = this.clearCanvas.bind(this)
     this.sketchpad_mouseDown = this.sketchpad_mouseDown.bind(this)
     this.sketchpad_mouseUp = this.sketchpad_mouseUp.bind(this)
@@ -68,10 +67,9 @@ export default class VisualComponent extends React.Component {
     this.sketchpad_touchStart = this.sketchpad_touchStart.bind(this)
     this.sketchpad_touchMove = this.sketchpad_touchMove.bind(this)
     this.getTouchPos = this.getTouchPos.bind(this)
-    this.init = this.init.bind(this)
     this.loadImage = this.loadImage.bind(this)
   }
-  submit() {
+  submit = () => {
     const { send, artworkID } = this.props
     const { touchStack } = this.state
     const feedback = {
@@ -204,7 +202,7 @@ export default class VisualComponent extends React.Component {
   //   }
   // }
   // Set-up the canvas and add our event handlers after the page has loaded
-  init() {
+  init = () => {
       // Get the specific canvas element from the HTML document
       this.canvas = this.canvasRef.current
       // If the browser supports the canvas tag, get the 2d drawing context for this canvas

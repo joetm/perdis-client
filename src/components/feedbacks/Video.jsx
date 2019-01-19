@@ -63,7 +63,6 @@ export default class VideoComponent extends React.Component {
     // ---
     this.videoRef    = React.createRef()
     this.recordedRef = React.createRef()
-    this.submit = this.submit.bind(this)
     this.activateStream = this.activateStream.bind(this)
       this.handleGetUserMediaSuccess = this.handleGetUserMediaSuccess.bind(this)
       this.handleGetUserMediaError = this.handleGetUserMediaError.bind(this)
@@ -76,7 +75,7 @@ export default class VideoComponent extends React.Component {
     this.enableSubmitBtn = this.enableSubmitBtn.bind(this)
     this.resetVideo = this.resetVideo.bind(this)
   }
-  submit() {
+  submit = () => {
     const { send, artworkID } = this.props
     const feedback = {
       type: 'video',

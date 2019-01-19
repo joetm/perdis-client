@@ -18,17 +18,16 @@ const LIKERT = {
 }
 LIKERT.initial = (LIKERT.max - LIKERT.min) / 2 + 1;
 
+
 export default class LikertComponent extends React.Component {
   constructor(props) {
     super(props)
-      this.state = {
-        selectedOption: null,
-        sliderValue: LIKERT.initial,
-      }
-      this.submit = this.submit.bind(this)
-      this.handleSliderChange = this.handleSliderChange.bind(this)
+    this.state = {
+      selectedOption: null,
+      sliderValue: LIKERT.initial,
+    }
   }
-  submit () {
+  submit = () => {
     const { send, artworkID } = this.props // 'send' function from props
     const { sliderValue } = this.state
     const feedback = {
@@ -41,7 +40,7 @@ export default class LikertComponent extends React.Component {
       this.setState({sliderValue: LIKERT.initial})
     }
   }
-  handleSliderChange (value) {
+  handleSliderChange = (value) => {
     console.log("Slider changed to %s", value);
     this.setState({sliderValue: value});
   }

@@ -41,16 +41,12 @@ export default class ImageComponent extends React.Component {
     this.videoRef  = React.createRef()
     this.canvasRef = React.createRef()
     // ---
-    this.submit = this.submit.bind(this)
-    this.onCaptureClick = this.onCaptureClick.bind(this)
-    this.onResetButtonClick = this.onResetButtonClick.bind(this)
-    this.resetCapture = this.resetCapture.bind(this)
     // for web
     this.activateWebStream = this.activateWebStream.bind(this)
       this.handleStreamSuccess = this.handleStreamSuccess.bind(this)
       this.handleStreamError = this.handleStreamError.bind(this)
   }
-  submit() {
+  submit = () => {
     console.log("submitting feedback")
     const { send, artworkID } = this.props
     const { image } = this.state
@@ -92,7 +88,7 @@ export default class ImageComponent extends React.Component {
       }
       this.setState({errorMsg: name + ': ' + error.message})
     }
-  onCaptureClick() {
+  onCaptureClick = () => {
     // on desktop, use webrtc
     const videoNode = this.videoRef.current
     const canvasNode = this.canvasRef.current
@@ -112,12 +108,12 @@ export default class ImageComponent extends React.Component {
       selfieCaptured: true,
     })
   }
-  onResetButtonClick() {
+  onResetButtonClick = () => {
     this.resetCapture()
     this.activateWebStream()
     this.setState({isRecording: true})
   }
-  resetCapture() {
+  resetCapture = () => {
     const canvasNode = this.canvasRef.current
     const context = canvasNode.getContext('2d')
     context.clearRect(0, 0, canvasNode.width, canvasNode.height)
