@@ -1,5 +1,5 @@
 import React from 'react'
-import { Block, Row, Col, Button, Icon, BlockTitle } from 'framework7-react'
+import { Block, Row, Col, Fab, Button, Icon, BlockTitle } from 'framework7-react'
 
 // ------------------------
 // Based on:
@@ -244,7 +244,7 @@ export default class VisualComponent extends React.Component {
   render() {
     console.log('renderVISUAL')
 
-    const { touchStack, imgSrc } = this.state
+    const { touchStack = [], imgSrc } = this.state
     const { artwork, feedback, aspectRatio } = this.props
     const canvasHeight = canvasBaseLength / aspectRatio
 
@@ -262,14 +262,16 @@ export default class VisualComponent extends React.Component {
           ></canvas>
         </Block>
 
-        <Block style={{display: touchStack.length ? 'block' : 'none'}}>
+        <Block>
           <Row>
             <Col width="33"></Col>
             <Col width="33">
               <Button
                 outline big
                 onClick={this.clearCanvas}
-              >Clear</Button>
+                disabled={touchStack.length === 0}
+              >
+              <Icon md="f7:undo" style={{paddingRight: '0.5em'}} /> Undo</Button>
             </Col>
             <Col width="33"></Col>
           </Row>
