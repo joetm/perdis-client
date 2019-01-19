@@ -21,6 +21,13 @@ const styles = {
     userSelect: 'none',
   },
   sketchpad: {
+    WebkitTouchCallout: 'none',
+    WebkitUserSelect: 'none',
+    khtmlUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+    userSelect: 'none',
+
     border:'2px solid #888',
     borderRadius:'4px',
     position:'relative', /* Necessary for correct mouse co-ords in Firefox */
@@ -80,10 +87,13 @@ export default class VisualComponent extends React.Component {
   clearCanvas() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.loadImage()
+      // clear the touch stack
+      this.setState({touchStack: []})
   }
   // Draws a dot at a specific position on the supplied canvas name
   // Parameters are: A canvas context, the x position, the y position, the size of the dot
-  drawDot(x,y,size) {
+  drawDot(x,y) {
+      const size = 12
       // yellow
       const a = 255
       // Select a fill style
@@ -95,11 +105,12 @@ export default class VisualComponent extends React.Component {
       this.ctx.fill()
   } 
   // Keep track of the mouse button being pressed and draw a dot at current location
+  // This is also triggered for single touches
   sketchpad_mouseDown() {
     const { touchStack } = this.state
     this.mouseDown = 1
-    this.drawDot(this.mouseX,this.mouseY,12)
-    touchStack.push([this.mouseX,this.mouseY,12])
+    this.drawDot(this.mouseX,this.mouseY)
+    touchStack.push([this.mouseX,this.mouseY])
     this.setState({touchStack})
   }
   // Keep track of the mouse button being released
@@ -108,12 +119,15 @@ export default class VisualComponent extends React.Component {
   }
   // Keep track of the mouse position and draw a dot if mouse button is currently pressed
   sketchpad_mouseMove(e) {
-      // Update the mouse co-ordinates when moved
-      this.getMousePos(e);
-      // Draw a dot if the mouse button is currently being pressed
-      if (this.mouseDown == 1) {
-          this.drawDot(this.mouseX,this.mouseY,12)
-      }
+    const { touchStack } = this.state
+    // Update the mouse co-ordinates when moved
+    this.getMousePos(e);
+    // Draw a dot if the mouse button is currently being pressed
+    if (this.mouseDown == 1) {
+        this.drawDot(this.mouseX,this.mouseY)
+        touchStack.push([this.mouseX,this.mouseY])
+        this.setState({touchStack})
+    }
   }
   // Get the current mouse position relative to the top-left of the canvas
   getMousePos(e) {
@@ -130,35 +144,43 @@ export default class VisualComponent extends React.Component {
     }
   }
   // Draw something when a touch start is detected
-  sketchpad_touchStart() {
-      // Update the touch co-ordinates
-      this.getTouchPos()
-      this.drawDot(this.touchX, this.touchY, 12)
-      // Prevents an additional mousedown event being triggered
-      event.preventDefault()
+  sketchpad_touchStart(e) {
+    const { touchStack } = this.state
+    // Update the touch co-ordinates
+    this.getTouchPos(e)
+    this.drawDot(this.touchX, this.touchY)
+    // store touch
+    touchStack.push([this.touchX, this.touchY])
+    this.setState({touchStack})
+    // Prevents an additional mousedown event being triggered
+    e.preventDefault()
   }
   // Draw something and prevent the default scrolling when touch movement is detected
   sketchpad_touchMove(e) { 
-      // Update the touch co-ordinates
-      this.getTouchPos(e)
-      // During a touchmove event, unlike a mousemove event, we don't need to check if the touch is engaged, since there will always be contact with the screen by definition.
-      this.drawDot(this.touchX,this.touchY,12)
-      // Prevent a scrolling action as a result of this touchmove triggering.
-      event.preventDefault()
+    const { touchStack } = this.state
+    // Update the touch co-ordinates
+    this.getTouchPos(e)
+    // During a touchmove event, unlike a mousemove event, we don't need to check if the touch is engaged, since there will always be contact with the screen by definition.
+    this.drawDot(this.touchX, this.touchY)
+    // store touch
+    touchStack.push([this.touchX, this.touchY])
+    this.setState({touchStack})
+    // Prevent a scrolling action as a result of this touchmove triggering.
+    e.preventDefault()
   }
   // Get the touch position relative to the top-left of the canvas
   // When we get the raw values of pageX and pageY below, they take into account the scrolling on the page
   // but not the position relative to our target div. We'll adjust them using "target.offsetLeft" and
   // "target.offsetTop" to get the correct values in relation to the top left of the canvas.
   getTouchPos(e) {
-      if (!e) {
-          let e = event
-      }
       if(e.touches) {
           if (e.touches.length == 1) { // Only deal with one finger
               var touch = e.touches[0] // Get the information for finger #1
-              this.touchX = touch.pageX - touch.target.offsetLeft
-              this.touchY = touch.pageY - touch.target.offsetTop
+              const offsets = this.canvasRef.current.getBoundingClientRect()
+              // this.touchX = touch.pageX - touch.target.offsetLeft
+              // this.touchY = touch.pageY - touch.target.offsetTop
+              this.touchX = touch.pageX - offsets.left
+              this.touchY = touch.pageY - offsets.top
           }
       }
   }
@@ -207,11 +229,16 @@ export default class VisualComponent extends React.Component {
   render() {
     const { touchStack, imgSrc } = this.state
     const { artwork, feedback, aspectRatio } = this.props
-    console.log('aspectRatio', aspectRatio)
+    // console.log('aspectRatio', aspectRatio)
+    const canvasHeight = canvasBaseLength / aspectRatio
     return (
       <Block id="touch">
 
         <BlockTitle>{feedback.instructions}</BlockTitle>
+
+        {/*
+        <div>Coords: {this.touchX | this.mouseX}, {this.touchY | this.mouseY}</div>
+        */}
 
         <Block style={styles.sketchpadapp}>
             {/*
@@ -219,7 +246,7 @@ export default class VisualComponent extends React.Component {
             */}
               <canvas
                 width={canvasBaseLength}
-                height={canvasBaseLength / aspectRatio}
+                height={canvasHeight}
                 style={styles.sketchpad}
                 ref={this.canvasRef}
               ></canvas>
