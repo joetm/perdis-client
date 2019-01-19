@@ -9,6 +9,8 @@ import {
 // import { Device } from 'framework7'
 
 import FeedbackFactory from '../FeedbackFactory'
+import NavCenterMsg from '../NavCenterMsg'
+
 
 const RECONNECT_TIMEOUT = 1000;
 
@@ -29,11 +31,9 @@ const styles = {
     textAlign: 'center',
     align: 'center',
   },
-  navCenterMsg: {
+  textCenter: {
     textAlign: 'center',
-    align: 'center',
-    margin: 'auto',
-  },
+  }
 }
 
 
@@ -113,6 +113,10 @@ export default class RatingPage extends React.Component {
     if (this.mySocket) {
       console.log('Sending feedback:', feedback)
       this.mySocket.send(JSON.stringify(feedback))
+      this.setState({
+        artwork: null,
+        feedback: null,
+      })
       return true
     }
     console.error('Can\'t send feedback - no WebSocket connection')
@@ -141,14 +145,19 @@ export default class RatingPage extends React.Component {
           <NavTitle title="Provide your feedback!" />
           {
             navCenterMsg &&
-              <div style={styles.navCenterMsg}>{navCenterMsg}</div>
+              <NavCenterMsg msg={navCenterMsg} />
           }
           {
             !infoOnlyFeedback &&
               <NavRight>
                 {
-                  artwork && artwork.src ?
-                    <img alt="Image" onLoad={this.getImageAspectRatio} src={artwork.src} style={styles.imgstyle} />
+                  artwork && artwork.thumb ?
+                    <img
+                      alt=""
+                      onLoad={this.getImageAspectRatio}
+                      src={artwork.thumb}
+                      style={styles.imgstyle}
+                    />
                     :
                     <Preloader style={styles.navLoader} size={42}></Preloader>
                 }
@@ -161,16 +170,13 @@ export default class RatingPage extends React.Component {
             <div>
             {
               artwork && !infoOnlyFeedback ?
-                <Block style={{textAlign: 'center'}}>
+                <Block style={styles.textCenter}>
                   <h1>
                         &quot;{artwork.title}&quot; <span style={{fontWeight: 'normal'}}>by</span> {artwork.artist}
                   </h1>
                 </Block>
                 :
-                <Block style={{textAlign: 'center'}}>
-                  <h2>
-                        Connecting to WebSocket Server
-                  </h2>
+                <Block style={styles.textCenter}>
                   <Preloader style={styles.navLoader} size={42}></Preloader>
                 </Block>
             }
@@ -189,7 +195,7 @@ export default class RatingPage extends React.Component {
 
         {
           connectionError &&
-            <Block style={{textAlign: 'center'}}>
+            <Block style={styles.textCenter}>
               <BlockTitle>WEBSOCKET CONNECTION ERROR</BlockTitle>
               <p>
                 Could not connect to ws://{SERVER}:{PORT}

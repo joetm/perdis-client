@@ -31,7 +31,7 @@ const FeedbackFactory = (props) => {
     case 'imagetimer':
       return <ImageTimer
               artworkID={artworkID} feedback={feedback} send={send}
-              updateNavCenterMsg={this.updateNavCenterMsg}
+              updateNavCenterMsg={updateNavCenterMsg}
              />
       break
     case 'image':

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Block, Row, Col, Fab, Button, Icon, BlockTitle } from 'framework7-react'
+import { Block, Row, Col, Button, Icon } from 'framework7-react'
 
 // ------------------------
-// Based on:
+// Canvas Drawing based on:
 // https://zipso.net/a-simple-touchscreen-sketchpad-using-javascript-and-html5/
 // ------------------------
 
@@ -251,7 +251,7 @@ export default class VisualComponent extends React.Component {
     return (
       <Block id="touch">
 
-        <BlockTitle>{feedback.instructions}</BlockTitle>
+        <h2>{feedback.instructions}</h2>
 
         <Block style={styles.sketchpadapp}>
           <canvas

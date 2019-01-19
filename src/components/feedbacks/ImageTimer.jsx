@@ -173,7 +173,7 @@ export default class ImageTimerComponent extends React.Component {
     // !this.state.image || 
     if (nextProps.artworkID !== this.state.artworkID) {
       this.setState({artworkID: nextProps.artworkID})
-      this.activateWebStream()
+      // this.activateWebStream()
     }
   }
   render() {
