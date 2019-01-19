@@ -45,6 +45,7 @@ export default class VisualComponent extends React.Component {
     // ---
     this.state = {
       touchStack: [],
+      artworkSrc: null,
     }
     // ---
     this.ctx = null
@@ -86,9 +87,10 @@ export default class VisualComponent extends React.Component {
   // Clear the canvas context using the canvas width and height
   clearCanvas() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        // clear the touch stack
+      this.setState({touchStack: [], artworkSrc: null})
+      // load the image into the canvas
       this.loadImage()
-      // clear the touch stack
-      this.setState({touchStack: []})
   }
   // Draws a dot at a specific position on the supplied canvas name
   // Parameters are: A canvas context, the x position, the y position, the size of the dot
@@ -185,14 +187,21 @@ export default class VisualComponent extends React.Component {
       }
   }
   loadImage() {
-    const { aspectRatio } = this.props
-    const { artwork } = this.props
+    const { artwork, aspectRatio } = this.props
     const imageObj = new Image()
     imageObj.onload = function() {
+      console.info('imageObj.onload')
       this.ctx.drawImage(imageObj, 0, 0, this.canvas.width, this.canvas.height)
     }.bind(this)
     imageObj.src = artwork.src
   }
+  // componentWillReceiveProps(nextProps) {
+  //   console.info("componentWillReceiveProps", "new:", nextProps.artwork.src, "old:", this.state.artworkSrc)
+  //   if (nextProps.artwork.src !== this.state.artworkSrc) {
+  //     this.setState({artworkSrc: nextProps.artwork.src})
+  //     this.loadImage()
+  //   }
+  // }
   // Set-up the canvas and add our event handlers after the page has loaded
   init() {
       // Get the specific canvas element from the HTML document
@@ -216,6 +225,12 @@ export default class VisualComponent extends React.Component {
   componentDidMount() {
     this.init()
   }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.artwork.src !== prevState.artworkSrc) {
+  //     this.setState({artworkSrc: this.props.artwork.src})
+  //     this.loadImage()
+  //   }
+  // }
   componentWillUnmount() {
       // reset canvas
       this.ctx = null
@@ -227,29 +242,24 @@ export default class VisualComponent extends React.Component {
       this.touchY = null
   }
   render() {
+    console.log('renderVISUAL')
+
     const { touchStack, imgSrc } = this.state
     const { artwork, feedback, aspectRatio } = this.props
-    // console.log('aspectRatio', aspectRatio)
     const canvasHeight = canvasBaseLength / aspectRatio
+
     return (
       <Block id="touch">
 
         <BlockTitle>{feedback.instructions}</BlockTitle>
 
-        {/*
-        <div>Coords: {this.touchX | this.mouseX}, {this.touchY | this.mouseY}</div>
-        */}
-
         <Block style={styles.sketchpadapp}>
-            {/*
-            <img src={artwork.src} id="canvas" ref={this.canvasRef} style={styles.canvas} />
-            */}
-              <canvas
-                width={canvasBaseLength}
-                height={canvasHeight}
-                style={styles.sketchpad}
-                ref={this.canvasRef}
-              ></canvas>
+          <canvas
+            width={canvasBaseLength}
+            height={canvasHeight}
+            style={styles.sketchpad}
+            ref={this.canvasRef}
+          ></canvas>
         </Block>
 
         <Block style={{display: touchStack.length ? 'block' : 'none'}}>
