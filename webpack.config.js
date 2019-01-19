@@ -52,7 +52,15 @@ let webpackConfig = {
           loader: 'babel-loader',
           options: {
             presets: [ 'react', 'env' ],
-            plugins: devMode ? ['react-hot-loader/babel', 'babel-plugin-transform-class-properties'] : []
+            plugins: devMode ?
+            	[
+            		'react-hot-loader/babel',
+            		'transform-class-properties',
+            		'transform-object-rest-spread'
+            	] : [
+            		'transform-class-properties',
+            		'transform-object-rest-spread'
+            	]
           } 
         }]
       },
