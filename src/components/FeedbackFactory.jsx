@@ -15,12 +15,13 @@ import MultipleChoice from './feedbacks/MultipleChoice'
 
 const FeedbackFactory = (props) => {
   // info: don't change state here - this is used to render feedback
-  const { feedback, artwork, artworkAspectRatio, updateNavCenterMsg, send } = props
+  const { feedback, artwork, aspectRatio, updateNavCenterMsg, send } = props
   if (!feedback || !feedback.type || !artwork) {
     return null
   }
-  const artworkID = artwork.id
   console.log('FeedbackFactory:', feedback.type);
+  console.log('aspectRatio', aspectRatio)
+  const artworkID = artwork.id
   switch (feedback.type) {
     case 'dummy':
       return <Dummy
@@ -52,7 +53,7 @@ const FeedbackFactory = (props) => {
       return <Visual
               artworkID={artworkID} feedback={feedback} send={send}
               artwork={artwork}
-              aspectRatio={artworkAspectRatio}
+              aspectRatio={aspectRatio}
             />
       break
     case 'question':

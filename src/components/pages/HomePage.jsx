@@ -8,17 +8,7 @@ import {
 } from 'framework7-react'
 // import { Device } from 'framework7'
 
-import Image          from '../feedbacks/Image'
-import ImageTimer     from '../feedbacks/ImageTimer'
-import Video          from '../feedbacks/Video'
-import Dummy          from '../feedbacks/Dummy'
-import Reaction       from '../feedbacks/Reaction'
-import Visual         from '../feedbacks/Visual'
-import Question       from '../feedbacks/Question'
-import Answer         from '../feedbacks/Answer'
-import Likert         from '../feedbacks/Likert'
-import VoteUpDown     from '../feedbacks/VoteUpDown'
-import MultipleChoice from '../feedbacks/MultipleChoice'
+import FeedbackFactory from '../FeedbackFactory'
 
 const RECONNECT_TIMEOUT = 1000;
 
@@ -62,11 +52,10 @@ export default class RatingPage extends React.Component {
       error: null,
       navCenterMsg: '',
       infoOnlyFeedback: false,
-      artworkAspectRatio: 1,
+      aspectRatio: 1,
     }
     // ---
     this.refresh = this.refresh.bind(this)
-    this.renderFeedback = this.renderFeedback.bind(this)
     this.connectWebSocket = this.connectWebSocket.bind(this)
     this.updateNavCenterMsg = this.updateNavCenterMsg.bind(this)
     this.getImageAspectRatio = this.getImageAspectRatio.bind(this)
@@ -129,62 +118,16 @@ export default class RatingPage extends React.Component {
     console.error('Can\'t send feedback - no WebSocket connection')
     return false
   }
-  renderFeedback () {
-    // info: don't change state here - this is used to render feedback
-    const { feedback, artwork, artworkAspectRatio } = this.state
-    if (!feedback || !feedback.type || !artwork) {
-      return null
-    }
-    const artworkID = artwork.id
-    console.log('render feedback:', feedback.type);
-    switch (feedback.type) {
-      case 'dummy':
-        return <Dummy artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'imagetimer':
-        return <ImageTimer artworkID={artworkID} feedback={feedback} send={this.refresh} updateNavCenterMsg={this.updateNavCenterMsg} />
-        break
-      case 'image':
-        return <Image artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'video':
-        return <Video artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'reaction':
-        return <Reaction artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'visual':
-        return <Visual artworkID={artworkID} aspectRatio={artworkAspectRatio} artwork={artwork} feedback={feedback} send={this.refresh} />
-        break
-      case 'question':
-        return <Question artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'answer':
-        return <Answer artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'likert':
-        return <Likert artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'multiplechoice':
-        return <MultipleChoice artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-      case 'vote':
-        return <VoteUpDown artworkID={artworkID} feedback={feedback} send={this.refresh} />
-        break
-    }
-    console.error('unknown feedback.type', feedback.type)
-    return null
-  }
   updateNavCenterMsg(msg) {
     this.setState({navCenterMsg: msg})
   }
   getImageAspectRatio({target: img}) {
     this.setState({
-      artworkAspectRatio: img.offsetWidth / img.offsetHeight,
+      aspectRatio: img.offsetWidth / img.offsetHeight,
     })
   }
   render () {
-    const { artwork, feedback, connectionError, navCenterMsg, infoOnlyFeedback } = this.state
+    const { artwork, feedback, aspectRatio, connectionError, navCenterMsg, infoOnlyFeedback } = this.state
     const { SERVER, PORT } = this.$f7.data
     return (
       <Page style={{backgroundColor: !infoOnlyFeedback ? 'inherit' : '#ffeb3b' }}>
@@ -235,7 +178,13 @@ export default class RatingPage extends React.Component {
         }
 
         <Block style={styles.feedback}>
-          { this.renderFeedback() }
+          <FeedbackFactory
+            feedback={feedback}
+            artwork={artwork}
+            send={this.refresh}
+            updateNavCenterMsg={this.updateNavCenterMsg}
+            aspectRatio={aspectRatio}
+          />
         </Block>
 
         {
