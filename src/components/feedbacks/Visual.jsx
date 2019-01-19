@@ -187,6 +187,7 @@ export default class VisualComponent extends React.Component {
       }
   }
   loadImage() {
+    console.log('loadImage')
     const { artwork, aspectRatio } = this.props
     const imageObj = new Image()
     imageObj.onload = function() {
@@ -225,12 +226,11 @@ export default class VisualComponent extends React.Component {
   componentDidMount() {
     this.init()
   }
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.artwork.src !== prevState.artworkSrc) {
-  //     this.setState({artworkSrc: this.props.artwork.src})
-  //     this.loadImage()
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.state.touchStack.length) {
+      this.loadImage()
+    }
+  }
   componentWillUnmount() {
       // reset canvas
       this.ctx = null
