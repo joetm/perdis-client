@@ -1,6 +1,6 @@
 import React from 'react'
 import { Block, Row, Col, Button, Icon } from 'framework7-react'
-// import { Device } from 'framework7'
+import { Device } from 'framework7'
 import { getMediaRecorderOptions } from './videohelpers'
 
 
@@ -15,10 +15,30 @@ const cameraOptions = {
 }
 
 
+// storage location:
+// externalDataDirectory file:///storage/emulated/0/Android/data/com.perdis.prototype/files/
+
+
 /* globals MediaRecorder */
 
 const StartButtonTxt = function () { return <span><Icon fa="dot-circle"></Icon> Start Recording</span> }
 const StopButtonTxt  = function () { return <span><Icon fa="stop-circle"></Icon> Stop Recording</span> }
+
+// https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-file/index.html
+function writeFile(fileEntry, dataObj) {
+  // If data object is not passed in, cancel saving
+  if (!dataObj) { return }
+  // Create a FileWriter object for our FileEntry (log.txt).
+  fileEntry.createWriter(function (fileWriter) {
+    fileWriter.onwriteend = function() {
+      console.log("Successful file write.", fileEntry)
+    };
+    fileWriter.onerror = function (e) {
+      console.log("Failed file write: " + e.toString())
+    };
+    fileWriter.write(dataObj)
+  });
+}
 
 
 export default class VideoComponent extends React.Component {
@@ -63,12 +83,41 @@ export default class VideoComponent extends React.Component {
       id: artworkID,
     }
     const blob = new Blob(this.recordedBlobs, {type: 'video/webm'})
+
+    // write video to external storage
+    if (Device.android) {
+
+      window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, (dirEntry) => {
+        console.log('file system open: ' + dirEntry.name)
+        dirEntry.getFile("TESTFILE.webm", { create: true, exclusive: false }, (fileEntry) => {
+          writeFile(fileEntry, blob)
+        }, this.onErrorCreateFile)
+      }, this.onErrorLoadFs)
+
+      // this stores in private app dir
+      // console.log('LocalFileSystem.PERSISTENT', LocalFileSystem.PERSISTENT);
+      // window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fs) => {
+      //   console.log('file system open: ' + fs.name);
+      //   fs.root.getFile("TESTFILE.mp4", { create: true, exclusive: false }, (fileEntry) => {
+      //     writeFile(fileEntry, blob)
+      //   }, this.onErrorCreateFile)
+      // }, this.onErrorLoadFs);
+
+    }
+
+    // TODO: store the path to the local file
     feedback.payload = blob
     const ret = send(feedback)
     if (ret) {
       this.resetVideo()
     }
   }
+    onErrorLoadFs(error) {
+      console.error('onErrorLoadFs', error)
+    }
+    onErrorCreateFile(error) {
+      console.error('onErrorCreateFile', error)
+    }
   enableSubmitBtn() {
     this.setState({
       submitBtnDisabled: false,

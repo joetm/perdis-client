@@ -42,7 +42,8 @@
       "monaca-plugin-monaca-core": {},
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-media-capture": {},
-      "cordova-plugin-camera": {}
+      "cordova-plugin-camera": {},
+      "cordova-plugin-file": {}
     },
     "platforms": [
       "android"

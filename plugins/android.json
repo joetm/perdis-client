@@ -27,11 +27,10 @@
     },
     "cordova-plugin-camera": {
       "PACKAGE_NAME": "com.perdis.prototype"
-    }
-  },
-  "dependent_plugins": {
+    },
     "cordova-plugin-file": {
       "PACKAGE_NAME": "com.perdis.prototype"
     }
-  }
+  },
+  "dependent_plugins": {}
 }
