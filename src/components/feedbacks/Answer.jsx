@@ -10,8 +10,10 @@ export default class AnswerComponent extends React.Component {
       submitBtnDisabled: true,
       answer: '',
     }
+    // ---
+    this.submit = this.submit.bind(this)
   }
-  submit = () => {
+  submit() {
     const { send, artworkID } = this.props // 'send' function from props
     const { answer } = this.state
     const feedback = {

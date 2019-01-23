@@ -8,14 +8,14 @@ const styles = {
   video: {
     width: 'auto',
     maxWidth: '100%',
-    maxHeight: '250px',
+    maxHeight: '640px',
     border: '3px solid red',
     backgroundColor: '#303030',
   },
   img: {
     width: 'auto',
     maxWidth: '100%',
-    maxHeight: '250px',
+    maxHeight: '640px',
     border: '3px solid #303030',
     backgroundColor: '#303030',
   },
@@ -64,7 +64,7 @@ export default class ImageComponent extends React.Component {
     console.log('activateWebStream')
     const constraints = {
       audio: false,
-      video: true
+      video: { width: 720, height: 1280 }, // true
     }
     navigator.mediaDevices.getUserMedia(constraints).then(
       this.handleStreamSuccess

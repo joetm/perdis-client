@@ -8,14 +8,14 @@ const styles = {
   video: {
     width: 'auto',
     maxWidth: '100%',
-    maxHeight: '250px',
+    maxHeight: '640px',
     border: '3px solid red',
     backgroundColor: '#303030',
   },
   img: {
     width: 'auto',
     maxWidth: '100%',
-    maxHeight: '250px',
+    maxHeight: '640px',
     border: '3px solid #303030',
     backgroundColor: '#303030',
   },

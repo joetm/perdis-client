@@ -34,7 +34,7 @@ const styles = {
   },
 }
 
-const canvasBaseLength = 500;
+const canvasBaseLength = 480;
 
 
 export default class VisualComponent extends React.Component {
@@ -109,8 +109,9 @@ export default class VisualComponent extends React.Component {
   sketchpad_mouseDown() {
     const { touchStack } = this.state
     this.mouseDown = 1
+  	const timestamp = (new Date()).getTime()
     this.drawDot(this.mouseX,this.mouseY)
-    touchStack.push([this.mouseX,this.mouseY])
+    touchStack.push([this.mouseX,this.mouseY, timestamp])
     this.setState({touchStack})
   }
   // Keep track of the mouse button being released
@@ -124,8 +125,9 @@ export default class VisualComponent extends React.Component {
     this.getMousePos(e);
     // Draw a dot if the mouse button is currently being pressed
     if (this.mouseDown == 1) {
+	  	const timestamp = (new Date()).getTime()
         this.drawDot(this.mouseX,this.mouseY)
-        touchStack.push([this.mouseX,this.mouseY])
+        touchStack.push([this.mouseX,this.mouseY, timestamp])
         this.setState({touchStack})
     }
   }
@@ -150,7 +152,8 @@ export default class VisualComponent extends React.Component {
     this.getTouchPos(e)
     this.drawDot(this.touchX, this.touchY)
     // store touch
-    touchStack.push([this.touchX, this.touchY])
+  	const timestamp = (new Date()).getTime()
+    touchStack.push([this.touchX, this.touchY, timestamp])
     this.setState({touchStack})
     // Prevents an additional mousedown event being triggered
     e.preventDefault()
@@ -161,9 +164,10 @@ export default class VisualComponent extends React.Component {
     // Update the touch co-ordinates
     this.getTouchPos(e)
     // During a touchmove event, unlike a mousemove event, we don't need to check if the touch is engaged, since there will always be contact with the screen by definition.
+  	const timestamp = (new Date()).getTime()
     this.drawDot(this.touchX, this.touchY)
     // store touch
-    touchStack.push([this.touchX, this.touchY])
+    touchStack.push([this.touchX, this.touchY, timestamp])
     this.setState({touchStack})
     // Prevent a scrolling action as a result of this touchmove triggering.
     e.preventDefault()

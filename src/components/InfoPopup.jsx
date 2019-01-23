@@ -5,6 +5,7 @@ import CryptoJS from "crypto-js"
 export default class InfoDialog extends React.Component {
   constructor (props) {
     super(props)
+    // ---
     this.state = {
       contactaddress: 'U2FsdGVkX1/JrJqNqbD5sIVnYfrksOefEbBPzqBmEv1lnCIGyRMM0EOgq+mSGJCC'
     }

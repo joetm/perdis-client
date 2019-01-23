@@ -11,8 +11,8 @@ const cameraOptions = {
   audio: false, // { echoCancellation: {exact: hasEchoCancellation} },
   video: {
     facingMode: "user", // front camera
-    width:  1280,
-    height: 720,
+    width:  720,
+    height: 1280,
   }
 }
 
@@ -264,7 +264,7 @@ export default class VideoComponent extends React.Component {
 
         <Block style={{display: isRecording ? 'block' : 'none'}}>
           <video id="video"    ref={this.videoRef}    style={{
-              maxHeight: '250px',
+              maxHeight: '640px',
               width: 'auto',
               maxWidth: '100%',
               border: isRecording ? '3px solid red' : '3px solid #303030',
@@ -276,7 +276,7 @@ export default class VideoComponent extends React.Component {
 
         <Block style={{display: isPlaying ? 'block' : 'none'}}>
           <video id="recorded" ref={this.recordedRef} style={{
-              maxHeight: '250px',
+              maxHeight: '640px',
               width: 'auto',
               maxWidth: '100%',
               border: '1px solid #000000',

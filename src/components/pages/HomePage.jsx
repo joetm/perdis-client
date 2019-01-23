@@ -47,22 +47,28 @@ export default class RatingPage extends React.Component {
       artwork: null,
       feedback: null,
       connectionError: false,
-      error: null,
       navCenterMsg: '',
       infoOnlyFeedback: false,
       aspectRatio: 1,
     }
+    // ---
+    this.refresh = this.refresh.bind(this)
   }
   connectWebSocket = () => {
     const { SERVER, PORT } = this.$f7.data
+    const self = this
     // this.setState({connectionError: true})
     this.mySocket = new WebSocket("ws://" + SERVER + ":" + PORT + "/")
     // console.log('mySocket', this.mySocket);
     this.mySocket.onopen = function (event) {
       console.info('WS: WebSocket connection established')
+      // reset the connection error message
+      if (self.state.connectionError === true) {
+        self.setState({connectionError: false})
+      }
       // request initial sync
       console.info('WS: syncing initial')
-      this.send("sync")
+      this.send("sync") // WebSocket send()
     }
     this.mySocket.onmessage = function (event) {
       // show new feedback and artwork
@@ -84,14 +90,12 @@ export default class RatingPage extends React.Component {
       }, RECONNECT_TIMEOUT)
 
     }.bind(this)
-    // TODO
     // this.mySocket.onclose = function (event) {
-    //   console.error('WS: WebSocket connection closed')
-    //   console.info(event)
-      // this.setState({
-      //   connectionError: true,
-      //   error: event,
-      // })
+    //   console.error('WS: WebSocket connection lost', event)
+    //   // this.setState({
+    //   //   connectionError: true,
+    //   //   error: event,
+    //   // })
     // }.bind(this)
   }
   componentWillMount () {
@@ -102,7 +106,7 @@ export default class RatingPage extends React.Component {
       this.mySocket.close()
     }
   }
-  refresh = (feedback) => {
+  refresh(feedback) {
     if (this.mySocket) {
       console.log('Sending feedback:', feedback)
       this.mySocket.send(JSON.stringify(feedback))
@@ -126,12 +130,11 @@ export default class RatingPage extends React.Component {
   render () {
     const { artwork, feedback, aspectRatio, connectionError, navCenterMsg, infoOnlyFeedback } = this.state
     const { SERVER, PORT } = this.$f7.data
+    console.log(artwork, feedback, aspectRatio)
     return (
       <Page style={{backgroundColor: !infoOnlyFeedback ? 'inherit' : '#ffeb3b' }}>
 
-        <Navbar
-          sliding
-        >
+        <Navbar sliding>
           <NavLeft>
             <Link popupOpen="#popup"><Icon f7="help_round" /></Link>
           </NavLeft>
@@ -190,9 +193,7 @@ export default class RatingPage extends React.Component {
           connectionError &&
             <Block style={styles.textCenter}>
               <BlockTitle>WEBSOCKET CONNECTION ERROR</BlockTitle>
-              <p>
-                Could not connect to ws://{SERVER}:{PORT}
-              </p>
+              <p>Could not connect to ws://{SERVER}:{PORT}</p>
             </Block>
         }
 
