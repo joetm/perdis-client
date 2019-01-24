@@ -172,11 +172,11 @@ export default class ImageTimerComponent extends React.Component {
   }
   render() {
     const { submitBtnDisabled, errorMsg, image, isRecording, selfieCaptured, timerRunning } = this.state
-    const { updateNavCenterMsg } = this.props
+    const { feedback, updateNavCenterMsg } = this.props
     return (
       <Block id="webcam-video">
 
-        <p>Send a selfie to the artist!</p>
+        <h2>{feedback.instructions}</h2>
 
         <div style={{display: errorMsg ? 'block' : 'none'}} id="errorMsg">{errorMsg}</div>
 

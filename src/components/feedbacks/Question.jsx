@@ -46,9 +46,10 @@ export default class QuestionComponent extends React.Component {
   }
   render () {
     const { question, submitBtnDisabled } = this.state
+    const { feedback } = this.props
     return (
       <Block>
-          <h2>Ask the artist a question</h2>
+          <h2>{feedback.instructions}</h2>
           <List noHairlines>
           <Input
             id="question"

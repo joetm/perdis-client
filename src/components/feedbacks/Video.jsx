@@ -257,10 +257,11 @@ export default class VideoComponent extends React.Component {
   }
   render() {
     const { isRecording, isPlaying } = this.state
+    const { feedback } = this.props
     return (
       <Block id="webcam-video">
 
-        <p>Send a selfie video to the artist!</p>
+        <h2>{feedback.instructions}</h2>
 
         <Block style={{display: isRecording ? 'block' : 'none'}}>
           <video id="video"    ref={this.videoRef}    style={{

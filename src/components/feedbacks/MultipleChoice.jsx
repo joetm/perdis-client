@@ -33,7 +33,7 @@ export default class LikertComponent extends React.Component {
     const { selectedOption } = this.state
     return (
       <Block>
-        <h2>Answer this question from the artist:</h2>
+        <h2>{feedback.instructions}</h2>
         <p>{feedback.content}</p>
 
         <BlockTitle>Choose one answer</BlockTitle>

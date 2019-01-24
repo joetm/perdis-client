@@ -139,10 +139,11 @@ export default class ImageComponent extends React.Component {
   }
   render() {
     const { submitBtnDisabled, errorMsg, image, isRecording, selfieCaptured } = this.state
+    const { feedback } = this.props
     return (
       <Block id="webcam-video">
 
-        <p>Send a selfie to the artist!</p>
+        <h2>{feedback.instructions}</h2>
 
         <div style={{display: errorMsg ? 'block' : 'none'}} id="errorMsg">{errorMsg}</div>
 
