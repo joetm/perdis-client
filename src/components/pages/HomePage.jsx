@@ -109,7 +109,13 @@ export default class RatingPage extends React.Component {
   refresh(feedback) {
     if (this.mySocket) {
       console.log('Sending feedback:', feedback)
-      this.mySocket.send(JSON.stringify(feedback))
+      if (feedback.type === 'dummy') {
+        feedback = "sync" // start fresh
+      } else {
+        feedback = JSON.stringify(feedback)
+      }
+      this.mySocket.send(feedback)
+      // reset
       this.setState({
         artwork: null,
         feedback: null,
