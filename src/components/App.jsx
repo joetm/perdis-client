@@ -28,6 +28,7 @@ export default function (props) {
     id: 'com.perdis.prototype', // App bundle ID
     name: 'PerDis Prototype', // App name
     theme: 'auto', // Automatic theme detection
+    fastClicks: true,
     // App routes
     routes,
       data: function () {
