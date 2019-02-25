@@ -33,31 +33,34 @@ export default class LikertComponent extends React.Component {
     const { selectedOption } = this.state
     return (
       <Block>
+
         <h2>{feedback.instructions}</h2>
-        <p>{feedback.content}</p>
+        {
+          feedback.content && <p>{feedback.content}</p>
+        }
 
         <BlockTitle>Choose one answer</BlockTitle>
         <List>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="auction" title="Auction it" name="choice"></ListItem>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="fair" title="Sell it at a fair or convention" name="choice"></ListItem>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="gallery" title="Exhibit it at an art gallery" name="choice"></ListItem>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="print" title="Print posters and postcards" name="choice"></ListItem>
-          <ListItem onChange={this.enableSubmitBtn} radio required value="keep" title="Keep it" name="choice"></ListItem>
+          {
+            feedback.options.map((item, index) => (
+              <ListItem key={`${index}${item.value}`} onChange={this.enableSubmitBtn} radio required value={item.value} title={item.title} name="choice"></ListItem>)
+            )
+          }
         </List>
 
-            <Row>
-              <Col width="33"></Col>
-              <Col width="33">
-                <Button fill big
-                  disabled={selectedOption ? false : true}
-                  onClick={this.submit}
-                >
-                  Submit
-                </Button>
-              </Col>
-              <Col width="33"></Col>
-            </Row>
-            <div>Clicking this button will submit your answer to the artist</div>
+        <Row>
+          <Col width="33"></Col>
+          <Col width="33">
+            <Button fill big
+              disabled={selectedOption ? false : true}
+              onClick={this.submit}
+            >
+              Submit
+            </Button>
+          </Col>
+          <Col width="33"></Col>
+        </Row>
+        <div>Clicking this button will submit your answer to the artist</div>
       </Block>
     )
   }

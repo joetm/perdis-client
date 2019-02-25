@@ -6,6 +6,14 @@ export default class ConsentComponent extends React.PureComponent {
   submit = () => {
     const { send } = this.props // 'send' function from props
     const feedback = {
+      type: 'stage2',
+      payload: {},
+    }
+    send(feedback)
+  }
+  cancel = () => {
+    const { send } = this.props // 'send' function from props
+    const feedback = {
       type: 'next',
       payload: {},
     }
@@ -20,7 +28,7 @@ export default class ConsentComponent extends React.PureComponent {
         <Row>
           <Col width="25"></Col>
           <Col width="25">
-            <Button fill big onClick={this.submit}>
+            <Button fill big onClick={this.cancel}>
               Cancel
             </Button>
           </Col>

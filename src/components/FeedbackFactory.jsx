@@ -4,6 +4,7 @@ import Image          from './feedbacks/Image'
 import ImageTimer     from './feedbacks/ImageTimer'
 import Video          from './feedbacks/Video'
 import Dummy          from './feedbacks/Dummy'
+import Consent        from './feedbacks/Consent'
 import Reaction       from './feedbacks/Reaction'
 import Visual         from './feedbacks/Visual'
 import Question       from './feedbacks/Question'
@@ -25,6 +26,11 @@ const FeedbackFactory = (props) => {
   switch (feedback.type) {
     case 'dummy':
       return <Dummy
+              artworkID={artworkID} feedback={feedback} send={send}
+             />
+      break
+    case 'consent':
+      return <Consent
               artworkID={artworkID} feedback={feedback} send={send}
              />
       break
