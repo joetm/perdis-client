@@ -235,7 +235,7 @@ export default class ReactionComponent extends React.Component {
             ref={this.recordedRef}
             muted={true}
             loop={true}
-            autoplay={true}
+            autoPlay={true}
           ></video>
         </Block>
 
@@ -255,15 +255,15 @@ export default class ReactionComponent extends React.Component {
           <Row>
             <Col width="20"></Col>
             <Col width="30">
+              <Button outline big onClick={this.skip}>Skip</Button>
+            </Col>
+            <Col width="30">
               <Button fill big
                 onClick={this.submit}
                 disabled={this.state.submitBtnDisabled}
               >
                 Submit
               </Button>
-            </Col>
-            <Col width="30">
-              <Button fill big onClick={this.skip}>Skip</Button>
             </Col>
             <Col width="20"></Col>
           </Row>

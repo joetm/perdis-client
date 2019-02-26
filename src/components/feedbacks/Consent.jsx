@@ -26,18 +26,18 @@ export default class ConsentComponent extends React.PureComponent {
         <h2>{feedback.instructions}</h2>
         <p>{feedback.content}</p>
         <Row>
-          <Col width="25"></Col>
-          <Col width="25">
-            <Button fill big onClick={this.cancel}>
+          <Col width="20"></Col>
+          <Col width="30">
+            <Button outline big onClick={this.cancel}>
               Cancel
             </Button>
           </Col>
-          <Col width="25">
+          <Col width="30">
             <Button fill big onClick={this.submit}>
               I Consent
             </Button>
           </Col>
-          <Col width="25"></Col>
+          <Col width="20"></Col>
         </Row>
       </Block>
     )

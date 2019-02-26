@@ -68,7 +68,7 @@ export default class RatingPage extends React.Component {
       }
       // request initial sync
       console.info('WS: syncing initial')
-      this.send("sync") // WebSocket send()
+      this.send(JSON.stringify({type: "sync"})) // this is WebSocket send(), not React method
     }
     this.mySocket.onmessage = function (event) {
       // show new feedback and artwork
@@ -77,7 +77,7 @@ export default class RatingPage extends React.Component {
       this.setState({
         artwork: obj.artwork,
         feedback: obj.feedback,
-        infoOnlyFeedback: obj.feedback.type === "dummy" ? true : false,
+        infoOnlyFeedback: obj.feedback.type === "dummy" || obj.feedback.type === "consent" ? true : false,
       })
     }.bind(this)
     this.mySocket.onerror = function (event) {
@@ -109,12 +109,7 @@ export default class RatingPage extends React.Component {
   refresh(feedback) {
     if (this.mySocket) {
       console.log('Sending feedback:', feedback)
-      if (feedback.type === 'dummy') {
-        feedback = "sync" // start fresh
-      } else {
-        feedback = JSON.stringify(feedback)
-      }
-      this.mySocket.send(feedback)
+      this.mySocket.send(JSON.stringify(feedback))
       // reset
       this.setState({
         artwork: null,
@@ -138,7 +133,8 @@ export default class RatingPage extends React.Component {
     const { SERVER, PORT } = this.$f7.data
     console.log(artwork, feedback, aspectRatio)
     return (
-      <Page style={{backgroundColor: !infoOnlyFeedback ? 'inherit' : '#ffeb3b' }}>
+      <Page>
+      {/*  style={{backgroundColor: !infoOnlyFeedback ? 'inherit' : '#ffeb3b' }} */}
 
         <Navbar sliding>
           <NavLeft>
