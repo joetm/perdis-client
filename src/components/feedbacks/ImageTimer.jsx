@@ -180,8 +180,7 @@ export default class ImageTimerComponent extends React.Component {
 
         <div style={{display: errorMsg ? 'block' : 'none'}} id="errorMsg">{errorMsg}</div>
 
-        <div style={{display: timerRunning ? 'block' : 'none'}}>
-            <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={'autoplay'} playsInline={true}></video>
+        <div style={{position: 'relative', display: timerRunning ? 'block' : 'none'}}>
             {
               timerRunning &&
                 <Timer
@@ -189,6 +188,7 @@ export default class ImageTimerComponent extends React.Component {
                   isRunning={timerRunning}
                 />
             }
+            <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={'autoplay'} playsInline></video>
         </div>
         <div style={{display: selfieCaptured ? 'block' : 'none'}}>
             <canvas id="canvas" ref={this.canvasRef} style={styles.img}></canvas>

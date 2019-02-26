@@ -9,8 +9,9 @@ const INITIAL = 'Ready?'
 
 const styles = {
   timerBox: {
-    position: 'relative',
-    top: -200,
+    position: 'absolute',
+    top: 200,
+    left: '45%',
     zIndex: 999,
     display: 'flex',
     margin: 'auto',
@@ -26,7 +27,6 @@ const styles = {
   innerDiv: {
     margin: 'auto',
     textAlign: 'center',
-    fontSize: '1.5em',
   },
 }
 
