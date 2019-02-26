@@ -47,7 +47,7 @@ export default class RatingPage extends React.Component {
       artwork: null,
       feedback: null,
       connectionError: false,
-      navCenterMsg: '',
+      // navCenterMsg: '',
       infoOnlyFeedback: false,
       aspectRatio: 1,
     }
@@ -120,16 +120,16 @@ export default class RatingPage extends React.Component {
     console.error('Can\'t send feedback - no WebSocket connection')
     return false
   }
-  updateNavCenterMsg = (msg) => {
-    this.setState({navCenterMsg: msg})
-  }
+  // updateNavCenterMsg = (msg) => {
+  //   this.setState({navCenterMsg: msg})
+  // }
   getImageAspectRatio = ({target: img}) => {
     this.setState({
       aspectRatio: img.offsetWidth / img.offsetHeight,
     })
   }
   render () {
-    const { artwork, feedback, aspectRatio, connectionError, navCenterMsg, infoOnlyFeedback } = this.state
+    const { artwork, feedback, aspectRatio, connectionError, infoOnlyFeedback } = this.state // , navCenterMsg
     const { SERVER, PORT } = this.$f7.data
     console.log(artwork, feedback, aspectRatio)
     return (
@@ -141,10 +141,10 @@ export default class RatingPage extends React.Component {
             <Link popupOpen="#popup"><Icon f7="help_round" /></Link>
           </NavLeft>
           <NavTitle title="Provide your feedback!" />
-          {
+          {/*
             navCenterMsg &&
               <NavCenterMsg msg={navCenterMsg} />
-          }
+          */}
           {
             !infoOnlyFeedback &&
               <NavRight>
@@ -186,9 +186,9 @@ export default class RatingPage extends React.Component {
             feedback={feedback}
             artwork={artwork}
             send={this.refresh}
-            updateNavCenterMsg={this.updateNavCenterMsg}
             aspectRatio={aspectRatio}
           />
+          {/*updateNavCenterMsg={this.updateNavCenterMsg}*/}
         </Block>
 
         {

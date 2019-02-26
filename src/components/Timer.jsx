@@ -2,24 +2,25 @@ import React from 'react'
 import { Block } from 'framework7-react'
 
 
-const COUNTDOWNSTART = 3;
-const TIMEOUT = 1000;
-const INITIAL = 'Ready?';
+const COUNTDOWNSTART = 3
+const TIMEOUT = 1000
+const INITIAL = 'Ready?'
 
 
 const styles = {
   timerBox: {
-    // position: 'fixed',
-    // top: 10,
-    // right: '50%',
-    // zIndex: 999,
+    position: 'relative',
+    top: -200,
+    zIndex: 999,
     display: 'flex',
     margin: 'auto',
     width: '200px',
     height: '200px',
+    opacity: 0.8,
     border: '1px solid #303030',
     borderRadius: '50%',
     backgroundColor: '#FFFFFF',
+    fontSize: '40px',
     // transform: 'translateZ(0)',
   },
   innerDiv: {
@@ -33,31 +34,25 @@ const styles = {
 export default class Timer extends React.Component {
   constructor(props) {
     super(props)
-    // this.state = {
-    //   txt: INITIAL,
-    // }
     this.intervalTimer = null
-    // ---
-    this.RunActionAndReset = this.RunActionAndReset.bind(this)
+    this.state = {
+      txt: INITIAL,
+    }
   }
   reset() {
     this.setState({txt: INITIAL})
   }
-  RunActionAndReset() {
-    const { action, updateNavCenterMsg } = this.props
+  RunActionAndReset = () => {
+    const { action } = this.props
     clearInterval(this.intervalTimer)
-    updateNavCenterMsg('')
-    // this.setState({
-    //   txt: INITIAL,
-    // })
+    this.setState({
+      txt: '',
+    })
     // run the action provided by parent element
     action()
   }
   componentDidMount() {
     let t = COUNTDOWNSTART;
-    const { updateNavCenterMsg } = this.props
-
-    updateNavCenterMsg(INITIAL)
 
     const self = this
 
@@ -65,25 +60,25 @@ export default class Timer extends React.Component {
       if (t == 0) {
         self.RunActionAndReset()
       } else {
-        updateNavCenterMsg(t)
-        // self.setState({
-        //   txt: t,
-        // })
+        // updateNavCenterMsg(t)
+        self.setState({txt: t})
       }
       t = t - 1;
     }, TIMEOUT)
 
   }
   render () {
-    return null;
-    // const { txt } = this.state
-    // const { isRunning } = this.props
-    // return (
-    //   <Block>
-    //     <div style={styles.timerBox}>
-    //       <p style={styles.innerDiv}>{txt}</p>
-    //     </div>
-    //   </Block>
-    // )
+    const { txt } = this.state
+    const { isRunning } = this.props
+    if (!isRunning) {
+      return null
+    }
+    return (
+      <Block>
+        <div style={styles.timerBox}>
+          <p style={styles.innerDiv}>{txt}</p>
+        </div>
+      </Block>
+    )
   }
 }

@@ -182,19 +182,17 @@ export default class ImageTimerComponent extends React.Component {
 
         <div style={{display: timerRunning ? 'block' : 'none'}}>
             <video  id="video"  ref={this.videoRef}  style={styles.video} autoPlay={'autoplay'} playsInline={true}></video>
+            {
+              timerRunning &&
+                <Timer
+                  action={this.capture}
+                  isRunning={timerRunning}
+                />
+            }
         </div>
         <div style={{display: selfieCaptured ? 'block' : 'none'}}>
             <canvas id="canvas" ref={this.canvasRef} style={styles.img}></canvas>
         </div>
-
-        {
-          timerRunning &&
-            <Timer
-              action={this.capture}
-              isRunning={timerRunning}
-              updateNavCenterMsg={updateNavCenterMsg}
-            />
-        }
 
         <Row>
           <Col width="20"></Col>

@@ -7,7 +7,7 @@ const styles = {
   video: {
     width: 'auto',
     maxWidth: '100%',
-    maxHeight: '250px',
+    maxHeight: '500px',
     border: '3px solid #303030',
     backgroundColor: '#303030',
   }
@@ -255,7 +255,7 @@ export default class ReactionComponent extends React.Component {
           <Row>
             <Col width="20"></Col>
             <Col width="30">
-              <Button outline big onClick={this.skip}>Skip</Button>
+              <Button outline big onClick={this.skip}>Cancel</Button>
             </Col>
             <Col width="30">
               <Button fill big
@@ -268,7 +268,7 @@ export default class ReactionComponent extends React.Component {
             <Col width="20"></Col>
           </Row>
           <div>Clicking the submit button will submit your video to the artist.</div>
-          <div>Clicking &quot;skip&quot; will delete the video.</div>
+          <div>Clicking &quot;cancel&quot; will delete the video.</div>
         </Block>
 
       </Block>
