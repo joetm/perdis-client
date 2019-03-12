@@ -7,6 +7,7 @@ import Dummy          from './feedbacks/Dummy'
 import Consent        from './feedbacks/Consent'
 import Reaction       from './feedbacks/Reaction'
 import Visual         from './feedbacks/Visual'
+import Annotator      from './feedbacks/Annotator'
 import Question       from './feedbacks/Question'
 import Answer         from './feedbacks/Answer'
 import Likert         from './feedbacks/Likert'
@@ -21,7 +22,6 @@ const FeedbackFactory = (props) => {
     return null
   }
   console.log('FeedbackFactory:', feedback.type);
-  console.log('aspectRatio', aspectRatio)
   const artworkID = artwork.id
   switch (feedback.type) {
     case 'dummy':
@@ -54,6 +54,13 @@ const FeedbackFactory = (props) => {
       return <Reaction
               artworkID={artworkID} feedback={feedback} send={send}
              />
+      break
+    case 'annotation':
+      return <Annotator
+              artworkID={artworkID} feedback={feedback} send={send}
+              artwork={artwork}
+              aspectRatio={aspectRatio}
+            />
       break
     case 'visual':
       return <Visual

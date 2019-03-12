@@ -11,6 +11,9 @@ export default class DummyComponent extends React.PureComponent {
     }
     send(feedback)
   }
+  componentDidMount() {
+    // fetch('https://ubistudies.com/perdis/test/RemoteComponent.jsx')
+  }
   render () {
     const { feedback } = this.props
     return (

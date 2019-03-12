@@ -1,5 +1,4 @@
 import React from 'react'
-import fetch from 'unfetch'
 import {
   Page, Navbar, Preloader, NavTitle, NavRight, NavLeft,
   Link, Icon, Block, BlockTitle,
