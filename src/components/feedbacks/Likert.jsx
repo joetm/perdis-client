@@ -49,8 +49,12 @@ export default class LikertComponent extends React.Component {
     const { selectedOption, sliderValue } = this.state
     return (
       <Block>
-        <h2>{feedback.instructions}</h2>
-        <p>{feedback.content}</p>
+        {
+          feedback.instructions && <h2>{feedback.instructions}</h2>
+        }
+        {
+          feedback.content && <p>{feedback.content}</p>
+        }
 
         <BlockTitle>Choose your answer</BlockTitle>
 

@@ -1,33 +1,33 @@
 // Import React and ReactDOM
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
 // Import Framework7
-import Framework7 from 'framework7/framework7.esm.bundle';
+import Framework7 from 'framework7/framework7.esm.bundle'
 
 // Import Framework7-React plugin
-import Framework7React from 'framework7-react';
+import Framework7React from 'framework7-react'
 
 //webrtc shim
-import "webrtc-adapter/out/adapter.js";
+import "webrtc-adapter/out/adapter.js"
 
 // Import main App component
-import App from './components/App.jsx';
+import App from './components/App.jsx'
 
 // Framework7 styles
-import 'framework7/css/framework7.min.css';
+import 'framework7/css/framework7.min.css'
 
 // Icons
-import './css/icons.css';
+import './css/icons.css'
 
 // FontAwesome
 import '../node_modules/@fortawesome/fontawesome-pro/css/all.min.css'
 
 // Custom app styles
-import './css/app.css';
+import './css/app.css'
 
-import 'react-hot-loader/patch';
-import {AppContainer} from 'react-hot-loader';
+import 'react-hot-loader/patch'
+import {AppContainer} from 'react-hot-loader'
 
 // Init Framework7-React plugin
 Framework7.use(Framework7React);

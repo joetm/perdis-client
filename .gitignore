@@ -1,3 +1,4 @@
+SSH
 .npmrc
 /.monaca/*
 !/.monaca/project_info.json

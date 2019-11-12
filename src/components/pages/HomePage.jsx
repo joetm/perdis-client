@@ -128,7 +128,7 @@ export default class RatingPage extends React.Component {
     })
   }
   render () {
-    const { artwork, feedback, aspectRatio, connectionError, infoOnlyFeedback } = this.state // , navCenterMsg
+    const { artwork = null, feedback, aspectRatio, connectionError, infoOnlyFeedback } = this.state // , navCenterMsg
     const { SERVER, PORT } = this.$f7.data
     console.log(artwork, feedback, aspectRatio)
     return (
@@ -166,12 +166,15 @@ export default class RatingPage extends React.Component {
           !infoOnlyFeedback &&
             <div>
             {
-              artwork && !infoOnlyFeedback ?
-                <Block style={styles.textCenter}>
-                  <h1>
-                        &quot;{artwork.title}&quot; <span style={{fontWeight: 'normal'}}>by</span> {artwork.artist}
-                  </h1>
-                </Block>
+              artwork && (artwork.title || artwork.artist) ?
+                (
+                  <Block style={styles.textCenter}>
+                    <h1>
+                      { artwork.title ? <span>&quot;{artwork.title}&quot;</span> : "" }
+                      { artwork.artist && <div><span style={{fontWeight: 'normal'}}>by</span> {artwork.artist}</div> }
+                    </h1>
+                  </Block>
+                )
                 :
                 <Block style={styles.textCenter}>
                   <Preloader style={styles.navLoader} size={42}></Preloader>
@@ -187,7 +190,6 @@ export default class RatingPage extends React.Component {
             send={this.refresh}
             aspectRatio={aspectRatio}
           />
-          {/*updateNavCenterMsg={this.updateNavCenterMsg}*/}
         </Block>
 
         {
